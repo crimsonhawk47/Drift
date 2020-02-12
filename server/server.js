@@ -58,8 +58,9 @@ const getChats = (socket) => {
   let userId = socket.request.session.passport.user;
 
 
-  let queryText = `SELECT * FROM "chat"
+  let queryText = `SELECT "messages".message, "user".username, "messages".user_id FROM "chat"
                     JOIN "messages" ON "messages".chat_id = "chat".id
+                    JOIN "user" ON "messages".user_id = "user".id
                     WHERE "chat".user1 = $1 OR "chat".user2=$1`
 
   pool.query(queryText, [Number(userId)])
