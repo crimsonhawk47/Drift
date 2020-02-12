@@ -6,6 +6,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 const socket = require('socket.io')
+const pool = require('./modules/pool');
+
 
 const passport = require('./strategies/user.strategy');
 
@@ -37,17 +39,30 @@ const server = app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
 
-const io = socket(server).use(function(socket, next){
+//SOCKET IO
+
+const io = socket(server).use(function (socket, next) {
   // Wrap the express middleware
   sessionMiddleware(socket.request, {}, next);
 })
-.on("connection", function(socket){
-  var userId = socket.request.session.passport;
-  console.log("Your User ID is", userId);
+
+io.on("connection", function (socket) {
+  var userId = socket.request.session.passport.user;
+  console.log("Your Passport is", userId);
+
+  let queryText = `SELECT * FROM "chat"
+                    JOIN "messages" ON "messages".chat_id = "chat".id
+                    WHERE "chat".user1 = $1 OR "chat".user2=$1`
+
+  pool.query(queryText, [Number(userId)])
+    .then(response => {
+      console.log(response.rows);
+      sendChats(response.rows)
+    }).catch(error => {
+      console.log(error);
+    })
 });
 
-
-// io.on('connection', (socket) => {
-//   console.log(socket.id);
-//   // io.to(socket.id).emit('SEND_ID')
-// })
+const sendChats = (chats, socketID)=>{
+  io.to(socketID).emit('RECEIVE_ALL_CHATS', chats)
+}
