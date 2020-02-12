@@ -47,7 +47,7 @@ const io = socket(server).use(function (socket, next) {
 })
 
 io.on("connection", function (socket) {
-  var userId = socket.request.session.passport.user;
+  let userId = socket.request.session.passport.user;
   getChats(socket);
   console.log("Your Passport is", userId);
 
@@ -55,6 +55,8 @@ io.on("connection", function (socket) {
 });
 
 const getChats = (socket) => {
+  let userId = socket.request.session.passport.user;
+
 
   let queryText = `SELECT * FROM "chat"
                     JOIN "messages" ON "messages".chat_id = "chat".id

@@ -19,6 +19,7 @@ function* fetchUser() {
     const response = yield axios.get('/api/user', config);
 
     const socket = io();
+    
 
     // now that the session has given us a user object
     // with an id and username set the client-side user object to let
