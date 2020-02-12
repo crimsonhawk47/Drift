@@ -42,7 +42,7 @@ const io = socket(server).use(function(socket, next){
   sessionMiddleware(socket.request, {}, next);
 })
 .on("connection", function(socket){
-  var userId = socket.request;
+  var userId = socket.request.session.passport;
   console.log("Your User ID is", userId);
 });
 
