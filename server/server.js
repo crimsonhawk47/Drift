@@ -5,6 +5,7 @@ require('dotenv').config();
 const app = express();
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
+const socket = require('socket.io')
 
 const passport = require('./strategies/user.strategy');
 
@@ -36,9 +37,17 @@ const server = app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
 
-io = socket(server);
-
-io.on('connection', (socket) => {
-  console.log(socket.id);
-  io.to(socket.id).emit('SEND_ID')
+const io = socket(server).use(function(socket, next){
+  // Wrap the express middleware
+  sessionMiddleware(socket.request, {}, next);
 })
+.on("connection", function(socket){
+  var userId = socket.request;
+  console.log("Your User ID is", userId);
+});
+
+
+// io.on('connection', (socket) => {
+//   console.log(socket.id);
+//   // io.to(socket.id).emit('SEND_ID')
+// })
