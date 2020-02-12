@@ -47,17 +47,29 @@ const io = socket(server).use(function (socket, next) {
 })
 
 io.on("connection", function (socket) {
-  var userId = socket.request.session.passport.user;
-  getChats(socket);
-  console.log("Your Passport is", userId);
+  let userId = socket.request.session.passport.user;
+  if (userId){
+    getChats(socket);
+    console.log("Your Passport is", userId);
+  }
+  else{
+    console.log(`[SECURITY ISSUE] Socket Connection was attempted before user was authorized`);
+    socket.disconnect();
+    
+    
+  }
+  
 
 
 });
 
 const getChats = (socket) => {
+  let userId = socket.request.session.passport.user;
 
-  let queryText = `SELECT * FROM "chat"
+
+  let queryText = `SELECT "messages".message, "user".username, "messages".user_id FROM "chat"
                     JOIN "messages" ON "messages".chat_id = "chat".id
+                    JOIN "user" ON "messages".user_id = "user".id
                     WHERE "chat".user1 = $1 OR "chat".user2=$1`
 
   pool.query(queryText, [Number(userId)])

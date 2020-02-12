@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
 import io from 'socket.io-client';
+import setupSocket from '../socket'
 
 
 
@@ -18,7 +19,8 @@ function* fetchUser() {
     // from the server session (req.user)
     const response = yield axios.get('/api/user', config);
 
-    const socket = io();
+    setupSocket();
+    
 
     // now that the session has given us a user object
     // with an id and username set the client-side user object to let
