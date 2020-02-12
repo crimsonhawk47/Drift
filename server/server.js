@@ -53,7 +53,9 @@ io.on("connection", function (socket) {
     console.log("Your Passport is", userId);
   }
   else{
-    console.log(`Socket Connection was attempted before user was authorized`);
+    console.log(`[SECURITY ISSUE] Socket Connection was attempted before user was authorized`);
+    socket.disconnect();
+    
     
   }
   
