@@ -48,8 +48,15 @@ const io = socket(server).use(function (socket, next) {
 
 io.on("connection", function (socket) {
   let userId = socket.request.session.passport.user;
-  getChats(socket);
-  console.log("Your Passport is", userId);
+  if (userId){
+    getChats(socket);
+    console.log("Your Passport is", userId);
+  }
+  else{
+    console.log(`Socket Connection was attempted before user was authorized`);
+    
+  }
+  
 
 
 });
