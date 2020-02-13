@@ -54,7 +54,7 @@ io.on("connection", function (socket) {
   let userId = socket.request.session.passport.user;
 
   if (userId) {
-    getChats(userId, socket.id);
+    getChats(socket)
     attachSocketMethods(socket)
     // console.log("Your Passport is", userId);
   }
@@ -67,26 +67,19 @@ io.on("connection", function (socket) {
 
 
 
-const getChats = (userId, socketId) => {
+function getChats(socket){
+  let userId = socket.request.session.passport.user;
 
-  let queryText = `SELECT "messages".message, "user".username, "messages".user_id FROM "chat"
+  let queryText = `SELECT "chat".id, "messages".message, "user".username, "messages".user_id FROM "chat"
                     JOIN "messages" ON "messages".chat_id = "chat".id
                     JOIN "user" ON "messages".user_id = "user".id
                     WHERE "chat".user1 = $1 OR "chat".user2=$1`
 
   pool.query(queryText, [Number(userId)])
     .then(response => {
-      // console.log(response.rows);
-      if (response.rows) {
-        io.to(socketId).emit('RECEIVE_ALL_CHATS', response.rows)
-      }
-      else {
-        console.log(`No Chats were Found`);
-
-      }
+      io.to(socket.id).emit('RECEIVE_ALL_CHATS', response.rows)
     }).catch(error => {
       console.log(error);
-      return false;
     })
 }
 
