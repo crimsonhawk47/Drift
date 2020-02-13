@@ -3,6 +3,11 @@ const attachSocketMethods = (socket) => {
         console.log(`IN TEST`);
         
       })
+
+    socket.on('SEND_MESSAGE', data => {
+        console.log(data);
+        
+    })
 }
 
 module.exports = attachSocketMethods

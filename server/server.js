@@ -51,7 +51,9 @@ const io = socket(server).use(function (socket, next) {
 
 io.on("connection", function (socket) {
   console.log(`New connection with id: ${socket.id}`);
-  let userId = socket.request.session.passport.user;
+  let userId = socket.request.session 
+  && socket.request.session.passport
+  && socket.request.session.passport.user;
 
   if (userId) {
     getChats(socket)

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Paper, Grid, Typography } from '@material-ui/core'
+import { Paper, Grid, Typography, Input, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
 const styles = theme => ({
+
     root: {
         flexGrow: 1,
     },
@@ -17,6 +18,20 @@ const styles = theme => ({
 
 
 class Chat extends Component {
+
+    state = {
+        input: ''
+    }
+
+    handleChangeFor(event, property) {
+        this.setState({
+            [property]: event.target.value
+        })
+    }
+
+    sendMessage = () => {
+        this.props.dispatch({ type: 'SEND_MESSAGE', payload: this.state.input })
+    }
 
     render() {
         const { classes } = this.props;
@@ -34,7 +49,6 @@ class Chat extends Component {
         }
         return (
             <Grid container className={classes.root} spacing={2} justify='center'>
-                {partner}
                 {chat && chat.chat_messages.map((messageData, index) => {
                     let message = messageData[0]
                     let userSpeaking = messageData[1]
@@ -50,6 +64,15 @@ class Chat extends Component {
                         </>
                     )
                 })}
+                <Grid item xs={11} container justify="center">
+                    <Input
+                        onChange={(event) => { this.handleChangeFor(event, 'input') }}
+                        placeholder='Send a message'
+                        fullWidth />
+                    <Button onClick={this.sendMessage}>Send Message</Button>
+                </Grid>
+
+
             </Grid>
         )
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
 import io from 'socket.io-client';
-import setupSocket from '../socket'
+import {setupSocket} from '../socket'
 
 
 
