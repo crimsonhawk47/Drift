@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 const socket = require('socket.io')
 const pool = require('./modules/pool');
+const attachSocketMethods = require('./socket/attachSocketMethods')
 
 
 const passport = require('./strategies/user.strategy');
@@ -46,26 +47,27 @@ const io = socket(server).use(function (socket, next) {
   sessionMiddleware(socket.request, {}, next);
 })
 
+
+
 io.on("connection", function (socket) {
+  console.log(`New connection with id: ${socket.id}`);
   let userId = socket.request.session.passport.user;
-  if (userId){
-    getChats(socket);
-    console.log("Your Passport is", userId);
+
+  if (userId) {
+    getChats(userId, socket.id);
+    attachSocketMethods(socket)
+    // console.log("Your Passport is", userId);
   }
-  else{
+  else {
     console.log(`[SECURITY ISSUE] Socket Connection was attempted before user was authorized`);
     socket.disconnect();
-    
-    
   }
-  
-
 
 });
 
-const getChats = (socket) => {
-  let userId = socket.request.session.passport.user;
 
+
+const getChats = (userId, socketId) => {
 
   let queryText = `SELECT "messages".message, "user".username, "messages".user_id FROM "chat"
                     JOIN "messages" ON "messages".chat_id = "chat".id
@@ -74,14 +76,18 @@ const getChats = (socket) => {
 
   pool.query(queryText, [Number(userId)])
     .then(response => {
-      console.log(response.rows);
-      sendChats(response.rows, socket.id)
+      // console.log(response.rows);
+      if (response.rows) {
+        io.to(socketId).emit('RECEIVE_ALL_CHATS', response.rows)
+      }
+      else {
+        console.log(`No Chats were Found`);
+
+      }
     }).catch(error => {
       console.log(error);
+      return false;
     })
 }
 
 
-const sendChats = (chats, socketID) => {
-  io.to(socketID).emit('RECEIVE_ALL_CHATS', chats)
-}

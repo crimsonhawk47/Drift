@@ -6,7 +6,7 @@ import io from 'socket.io-client'
 
 const setupSocket = () => {
 
-    const socket = io();
+    const socket = io('localhost:5000');
 
     socket.on('RECEIVE_ALL_CHATS', (data) => {
         console.log(`LOGGING DATA`);

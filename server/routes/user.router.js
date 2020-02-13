@@ -3,7 +3,8 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
-const socket = require('socket.io');
+
+
 
 const router = express.Router();
 
