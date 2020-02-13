@@ -16,6 +16,7 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
+import ChatList from '../ChatList/ChatList'
 import Chat from '../Chat/Chat'
 
 import './App.css';
@@ -60,6 +61,11 @@ class App extends Component {
             <ProtectedRoute
               exact
               path="/chat"
+              component={ChatList}
+            />
+            <ProtectedRoute
+              exact
+              path="/chat/:index"
               component={Chat}
             />
             {/* If none of the other routes matched, we will show a 404. */}

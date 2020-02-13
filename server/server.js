@@ -84,6 +84,7 @@ function getChats(socket){
                     GROUP BY "chat_id", "chat".user1, "chat".user2
                     `
   //Replaces the User ID's of both participants (in the last query) with their actual usernames
+  //Also places both usernames in a single array
   let fillUsernames = `SELECT "chat_id", "chat_messages", array_agg("user".username) as participants FROM (${combineMessagesByChat})
                         as foo
                         JOIN "user" ON "user".id = "user1" OR "user".id = "user2"

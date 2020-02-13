@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import {Route} from 'react-router-dom'
-import Chat from '../Chat/Chat'
+import ChatList from '../ChatList/ChatList'
 
 // this could also be written with destructuring parameters as:
 // const UserPage = ({ user }) => (
