@@ -11,9 +11,9 @@ let socket;
 const setupSocket = () => {
     console.log(`SOCKET LOOKS LIKE`);
     console.log(socket);
-    
-    
-    if (!socket) {
+
+
+    if (!socket || socket.disconnected) {
         let innerSocket = io('localhost:5000');
 
         innerSocket.on('RECEIVE_ALL_CHATS', (data) => {
@@ -22,18 +22,18 @@ const setupSocket = () => {
             //Logging the socket message in the messages reducer
             store.dispatch({ type: 'SET_ALL_CHATS', payload: data })
         })
-        innerSocket.on('TEST', (data)=>{
+        innerSocket.on('TEST', (data) => {
             console.log(`I'M IN A ROOM, LIKE ${data}`);
-            
+
         })
 
-        innerSocket.on('NOT_IN_ROOM', (data)=>{
+        innerSocket.on('NOT_IN_ROOM', (data) => {
             console.log(`You are not in this chat room`);
-            
+
         })
-        innerSocket.on('NEW_MESSAGE', ()=>{
+        innerSocket.on('NEW_MESSAGE', () => {
             console.log(`SOMEONE IN YOUR ROOM SENT A MESSAGE`);
-            
+
         })
         socket = innerSocket
     }
