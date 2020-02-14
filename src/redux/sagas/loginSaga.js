@@ -1,5 +1,6 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
+import {socket} from '../socket'
 
 // worker Saga: will be fired on "LOGIN" actions
 function* loginUser(action) {
@@ -53,6 +54,7 @@ function* logoutUser(action) {
     // remove the client-side user object to let
     // the client-side code know the user is logged out
     yield put({ type: 'UNSET_USER' });
+    socket.emit('LOG_ME_OUT')
 
   } catch (error) {
     console.log('Error with user logout:', error);

@@ -1,4 +1,3 @@
-import {socket} from '../socket'
 
 
 const userReducer = (state = {}, action) => {
@@ -6,7 +5,6 @@ const userReducer = (state = {}, action) => {
     case 'SET_USER':
       return action.payload;
     case 'UNSET_USER':
-      socket.disconnect();
       return {};
     default:
       return state;
