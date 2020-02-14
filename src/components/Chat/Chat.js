@@ -29,16 +29,21 @@ class Chat extends Component {
         })
     }
 
-    sendMessage = () => {
-        this.props.dispatch({ type: 'SEND_MESSAGE', payload: this.state.input })
+    sendMessage = (chatId) => {
+        this.props.dispatch({ type: 'SEND_MESSAGE', payload: {input: this.state.input, chatId: chatId} })
         this.setState({input: ''})
     }
 
     render() {
+        
+        
+        
         const { classes } = this.props;
 
         let index = this.props.match.params.index
         let chat = this.props.reduxStore.chats[index]
+        let chat_id = chat && chat.chat_id
+        
         let myUser = this.props.reduxStore.user.username
         let partner;
         if (chat) {
@@ -69,7 +74,7 @@ class Chat extends Component {
                         placeholder='Send a message'
                         value = {this.state.input}
                         fullWidth />
-                    <Button onClick={this.sendMessage}>Send Message</Button>
+                    <Button onClick={()=> {this.sendMessage(chat_id)}}>Send Message</Button>
                 </Grid>
 
 

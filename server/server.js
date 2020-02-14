@@ -58,19 +58,26 @@ io.on("connection", function (socket) {
   if (userId) {
 
     getChats(socket)
-    attachSocketMethods(socket)
+    attachSocketMethods(socket, io, {getChats: getChats})
     let queryText = `SELECT "id" from "chat"
                       WHERE "user1" = $1 OR "user2" = $1`
 
     pool.query(queryText, [userId])
       .then(result => {
+        console.log(`----------------------------`);
+        
         for (row of result.rows){
           console.log(`this loop ran`);
           
-          socket.join(String(row.id))
+          socket.join(row.id)
           console.log(`socket is joining ${row.id}`);
         }
-        socket.to('1').emit('TEST', 'HI ROOM 1!')
+        socket.to(1).emit('TEST', 'HI ROOM 1! SOMEONE NEW JUST JOINED THE THING')
+        console.log(`Emit should be done`);
+        console.log(`----------------------------`);
+        
+
+        
       })
       .catch(err => {
         console.log(err);

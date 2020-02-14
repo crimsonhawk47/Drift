@@ -22,6 +22,15 @@ const setupSocket = () => {
             console.log(`I'M IN A ROOM, LIKE ${data}`);
             
         })
+
+        innerSocket.on('NOT_IN_ROOM', (data)=>{
+            console.log(`You are not in this chat room`);
+            
+        })
+        innerSocket.on('NEW_MESSAGE', ()=>{
+            console.log(`SOMEONE IN YOUR ROOM SENT A MESSAGE`);
+            
+        })
         socket = innerSocket
     }
 
