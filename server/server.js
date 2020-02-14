@@ -51,13 +51,30 @@ const io = socket(server).use(function (socket, next) {
 
 io.on("connection", function (socket) {
   console.log(`New connection with id: ${socket.id}`);
-  let userId = socket.request.session 
-  && socket.request.session.passport
-  && socket.request.session.passport.user;
+  let userId = socket.request.session
+    && socket.request.session.passport
+    && socket.request.session.passport.user;
 
   if (userId) {
+
     getChats(socket)
     attachSocketMethods(socket)
+    let queryText = `SELECT "id" from "chat"
+                      WHERE "user1" = $1 OR "user2" = $1`
+
+    pool.query(queryText, [userId])
+      .then(result => {
+        for (row of result.rows){
+          console.log(`this loop ran`);
+          
+          socket.join(String(row.id))
+          console.log(`socket is joining ${row.id}`);
+        }
+        socket.to('1').emit('TEST', 'HI ROOM 1!')
+      })
+      .catch(err => {
+        console.log(err);
+      })
     // console.log("Your Passport is", userId);
   }
   else {
@@ -69,7 +86,7 @@ io.on("connection", function (socket) {
 
 
 
-function getChats(socket){
+function getChats(socket) {
   let userId = socket.request.session.passport.user;
 
   //Selects messages and their users by chat and groups them into an array in one column
@@ -95,8 +112,8 @@ function getChats(socket){
 
   pool.query(fillUsernames, [Number(userId)])
     .then(response => {
-      console.log(response.rows);
-      
+      // console.log(response.rows);
+
       io.to(socket.id).emit('RECEIVE_ALL_CHATS', response.rows)
     }).catch(error => {
       console.log(error);

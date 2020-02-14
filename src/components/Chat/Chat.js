@@ -31,6 +31,7 @@ class Chat extends Component {
 
     sendMessage = () => {
         this.props.dispatch({ type: 'SEND_MESSAGE', payload: this.state.input })
+        this.setState({input: ''})
     }
 
     render() {
@@ -53,21 +54,20 @@ class Chat extends Component {
                     let message = messageData[0]
                     let userSpeaking = messageData[1]
                     return (
-                        <>
-                            <Grid item xs={7}>
-                                <Grid container container spacing={0} justify='flex-start'>
-                                    <Paper>
-                                        <Typography>{userSpeaking}: {message}</Typography>
-                                    </Paper>
-                                </Grid>
+                        <Grid item xs={7} key={index}>
+                            <Grid container container spacing={0} justify='flex-start'>
+                                <Paper>
+                                    <Typography>{userSpeaking}: {message}</Typography>
+                                </Paper>
                             </Grid>
-                        </>
+                        </Grid>
                     )
                 })}
                 <Grid item xs={11} container justify="center">
                     <Input
                         onChange={(event) => { this.handleChangeFor(event, 'input') }}
                         placeholder='Send a message'
+                        value = {this.state.input}
                         fullWidth />
                     <Button onClick={this.sendMessage}>Send Message</Button>
                 </Grid>

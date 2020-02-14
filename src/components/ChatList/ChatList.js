@@ -33,12 +33,14 @@ class ChatList extends Component {
                         let messages = chat.chat_messages;
                         let lastMessage = messages[messages.length - 1][0]
 
-                        return (<Paper key={index} onClick={() => { this.goToChat(index) }}>
+                        return (
+                        <Paper key={index} onClick={() => { this.goToChat(index) }}>
                             <Typography >
                                 Chatting with {myUser === user1 ? user2 : user1}
                             </Typography>
                             <Typography>Last Message: {lastMessage}</Typography>
-                        </Paper>)
+                        </Paper>
+                        )
                     })}
                 </Grid>
             </Grid>
