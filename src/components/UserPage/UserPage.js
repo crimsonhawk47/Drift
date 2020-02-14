@@ -9,7 +9,6 @@ import ChatList from '../ChatList/ChatList'
 // and then instead of `props.user.username` you could use `user.username`
 
 const goToChat = (props) => {
-  console.log(`HEYOOOOOOOOO`);
   props.history.push('/chat')
 }
 
