@@ -100,7 +100,8 @@ function getChats(socket) {
   let combineMessagesText = `SELECT "chat".id as "chat_id", ARRAY["messages".message, "user".username] as message_details FROM "chat"
   JOIN "messages" ON "chat".id = "messages".chat_id
   JOIN "user" ON "user".id = "messages".user_id
-  WHERE "chat".user1 = $1 OR "chat".user2=$1`
+  WHERE "chat".user1 = $1 OR "chat".user2=$1
+  ORDER BY "messages".id DESC`
 
   //Creates an array of chat objects with four properties: 
   //The chat id, an array of messages, and the user ID's of both participants

@@ -9,6 +9,10 @@ let socket;
 //Without the cookie. We also need to export socket once it's working. So for now, it's undefined
 //until setupSocket is called from 
 const setupSocket = () => {
+    console.log(`SOCKET LOOKS LIKE`);
+    console.log(socket);
+    
+    
     if (!socket) {
         let innerSocket = io('localhost:5000');
 
