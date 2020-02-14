@@ -97,7 +97,7 @@ function getChats(socket) {
   let userId = socket.request.session.passport.user;
 
   //Selects messages and their users by chat and groups them into an array in one column
-  let combineMessagesText = `SELECT "chat".id as "chat_id", ARRAY["messages".message, "user".username] as message_details FROM "chat"
+  let combineMessagesText = `SELECT "chat".id as "chat_id", "messages".id as "message_details_id", ARRAY["messages".message, "user".username] as message_details FROM "chat"
   JOIN "messages" ON "chat".id = "messages".chat_id
   JOIN "user" ON "user".id = "messages".user_id
   WHERE "chat".user1 = $1 OR "chat".user2=$1
@@ -113,7 +113,7 @@ function getChats(socket) {
   //Replaces the User ID's of both participants (in the last query) with their actual usernames
   //Also places both usernames in a single array
   let fillUsernames = `SELECT "chat_id", "chat_messages", array_agg("user".username) as participants FROM (${combineMessagesByChat})
-                        as foo
+                        as bar
                         JOIN "user" ON "user".id = "user1" OR "user".id = "user2"
                         GROUP BY "chat_id", "chat_messages";
                         `
