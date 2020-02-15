@@ -10,7 +10,9 @@ const router = express.Router();
 
 // Handles Ajax request for user information if user is authenticated
 router.get('/', rejectUnauthenticated, (req, res) => {
+  
   // Send back user object from the session (previously queried from the database)
+  //REQ.USER is whatever gets "done" from deserializeUser in the user strategy file
   res.send(req.user);
 });
 
@@ -32,11 +34,17 @@ router.post('/register', (req, res, next) => {
 // this middleware will run our POST if successful
 // this middleware will send a 404 if not successful
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
+  // console.log(req.user);
+  
   res.sendStatus(200);
 });
 
 // clear all server session information about this user
 router.post('/logout', (req, res) => {
+  console.log(req.user);
+  
+  
+
   // Use passport's built-in method to log out the user
   req.logout();
   res.sendStatus(200);

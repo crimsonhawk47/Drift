@@ -18,6 +18,7 @@ import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 import ChatList from '../ChatList/ChatList'
 import Chat from '../Chat/Chat'
+import AvatarPicker from '../AvatarPicker/AvatarPicker'
 
 import './App.css';
 
@@ -58,15 +59,20 @@ class App extends Component {
               component={InfoPage}
             />
 
-            <ProtectedRoute
+            {/* <ProtectedRoute
               exact
               path="/chat"
               component={ChatList}
-            />
+            /> */}
             <ProtectedRoute
               exact
               path="/chat/:index"
               component={Chat}
+            />
+            <ProtectedRoute
+              exact
+              path="/avatar"
+              component={AvatarPicker}
             />
             {/* If none of the other routes matched, we will show a 404. */}
             <Route render={() => <h1>404</h1>} />

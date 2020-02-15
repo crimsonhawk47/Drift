@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Paper, Grid, Typography, Input, Button } from '@material-ui/core'
+import { Paper, Grid, Typography, Input, Button, Avatar } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
@@ -21,6 +21,10 @@ class Chat extends Component {
 
     state = {
         input: ''
+    }
+
+    goHome = ()=>{
+        this.props.history.push('/home')
     }
 
     handleChangeFor(event, property) {
@@ -59,9 +63,11 @@ class Chat extends Component {
                     let message = messageData.message
                     let userSpeaking = messageData.username
                     let date = messageData.date
+                    let img = messageData.img
                     return (
                         <Grid item xs={7} key={index}>
-                            <Grid container container spacing={0} justify='flex-start'>
+                            <Grid container spacing={0} justify='flex-start'>
+                            <Avatar src={img}></Avatar>
                                 <Paper>
                                     <Typography>{userSpeaking}: {message} ({date})</Typography>
                                 </Paper>
@@ -76,6 +82,7 @@ class Chat extends Component {
                         value = {this.state.input}
                         fullWidth />
                     <Button onClick={()=> {this.sendMessage(chat_id)}}>Send Message</Button>
+                    <Button onClick={this.goHome}>GO BACK HOME</Button>
                 </Grid>
 
 

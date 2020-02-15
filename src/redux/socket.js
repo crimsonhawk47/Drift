@@ -9,8 +9,6 @@ let socket;
 //Without the cookie. We also need to export socket once it's working. So for now, it's undefined
 //until setupSocket is called from 
 const setupSocket = () => {
-    console.log(`SOCKET LOOKS LIKE`);
-    console.log(socket);
 
 
     if (!socket || socket.disconnected) {
@@ -34,6 +32,12 @@ const setupSocket = () => {
         innerSocket.on('NEW_MESSAGE', () => {
             console.log(`SOMEONE IN YOUR ROOM SENT A MESSAGE`);
 
+        })
+        innerSocket.on('UPDATE_AVATAR', ()=>{
+            store.dispatch({type: 'FETCH_USER'})
+        })
+        innerSocket.on('GET_MESSAGES', ()=>{
+            store.dispatch({type: 'GET_MESSAGES'})
         })
         socket = innerSocket
     }

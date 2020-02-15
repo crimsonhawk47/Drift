@@ -14,6 +14,8 @@ passport.deserializeUser((id, done) => {
 
     if (user) {
       // user found
+      // user.test = 1
+
       delete user.password; // remove password so it doesn't get sent
       // done takes an error (null in this case) and a user
       done(null, user);

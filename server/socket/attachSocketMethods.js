@@ -11,6 +11,32 @@ const attachSocketMethods = (socket, io, serverMethods) => {
         
         socket.disconnect();
     })
+
+    socket.on('GET_MESSAGES', data=>{
+        serverMethods.getChats(socket)
+    })
+
+    socket.on('CHANGE_AVATAR', data=>{
+        let userId = socket.request.session.passport.user
+        // console.log(socket);
+        
+        console.log(socket.rooms);
+        
+        
+        let queryText = `UPDATE "user"
+                        SET "image" = $1
+                        WHERE "user".id = $2`
+        pool.query(queryText, [data, userId])
+        .then(result => {
+            io.to(socket.id).emit('UPDATE_AVATAR')
+            for (room in socket.rooms){
+                if (socket.id !== room){
+                io.to(room).emit('GET_MESSAGES')
+                }
+            }
+        })
+    })
+
     socket.on('SEND_MESSAGE', data => {
         let chatId = data.chatId
         let userId = socket.request.session.passport.user

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Paper, Grid, Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
+import {withRouter} from 'react-router-dom'
 import io from 'socket.io-client'
 import { json } from 'body-parser';
 
@@ -15,6 +16,8 @@ const styles = theme => ({
 class ChatList extends Component {
 
 
+
+    
 
     goToChat = (index) => {
         this.props.history.push(`/chat/${index}`)
@@ -31,7 +34,8 @@ class ChatList extends Component {
                         let user1 = chat.participants[0]
                         let user2 = chat.participants[1]
                         let messages = chat.chat_messages;
-                        let lastMessage = messages[messages.length - 1][0]
+                        let lastMessage = messages[messages.length - 1].message
+                        
 
                         return (
                         <Paper key={index} onClick={() => { this.goToChat(index) }}>
@@ -56,4 +60,4 @@ const mapStateToProps = (reduxStore) => {
 }
 
 
-export default withStyles(styles)(connect(mapStateToProps)(ChatList))
+export default withRouter(withStyles(styles)(connect(mapStateToProps)(ChatList)))
