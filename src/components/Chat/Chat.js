@@ -56,13 +56,14 @@ class Chat extends Component {
         return (
             <Grid container className={classes.root} spacing={2} justify='center'>
                 {chat && chat.chat_messages.map((messageData, index) => {
-                    let message = messageData[0]
-                    let userSpeaking = messageData[1]
+                    let message = messageData.message
+                    let userSpeaking = messageData.username
+                    let date = messageData.date
                     return (
                         <Grid item xs={7} key={index}>
                             <Grid container container spacing={0} justify='flex-start'>
                                 <Paper>
-                                    <Typography>{userSpeaking}: {message}</Typography>
+                                    <Typography>{userSpeaking}: {message} ({date})</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>

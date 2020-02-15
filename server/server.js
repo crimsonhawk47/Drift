@@ -97,26 +97,26 @@ function getChats(socket) {
   let userId = socket.request.session.passport.user;
 
   //Selects messages and their users by chat and groups them into an array in one column
-  let combineMessagesText = `SELECT "chat".id as "chat_id", "messages".id as "message_details_id", ARRAY["messages".message, "user".username] as message_details FROM "chat"
+  let combineMessagesText = `SELECT "chat".id as "chat_id", jsonb_build_object('message', "messages".message, 'username', "user".username, 'date', "messages".date) as message_details, "messages".id as "message_id" FROM "chat"
   JOIN "messages" ON "chat".id = "messages".chat_id
   JOIN "user" ON "user".id = "messages".user_id
   WHERE "chat".user1 = $1 OR "chat".user2=$1
-  ORDER BY "messages".id DESC`
+  ORDER BY "messages".id`
 
   //Creates an array of chat objects with four properties: 
   //The chat id, an array of messages, and the user ID's of both participants
-  let combineMessagesByChat = `SELECT "chat_id", array_agg("message_details") as chat_messages, "chat".user1, "chat".user2 from (${combineMessagesText})
-                    as foo
-                    JOIN "chat" ON "chat_id" = "chat".id
-                    GROUP BY "chat_id", "chat".user1, "chat".user2
-                    `
+  let combineMessagesByChat = `SELECT "chat_id",jsonb_agg("foo".message_details ORDER BY foo."message_id") as chat_messages, "chat".user1, "chat".user2 from (${combineMessagesText})
+                              as foo
+                              JOIN "chat" ON "chat_id" = "chat".id
+                              GROUP BY "chat_id", "chat".user1, "chat".user2
+                              `
   //Replaces the User ID's of both participants (in the last query) with their actual usernames
   //Also places both usernames in a single array
   let fillUsernames = `SELECT "chat_id", "chat_messages", array_agg("user".username) as participants FROM (${combineMessagesByChat})
-                        as bar
-                        JOIN "user" ON "user".id = "user1" OR "user".id = "user2"
-                        GROUP BY "chat_id", "chat_messages";
-                        `
+                      as goo
+                      JOIN "user" ON "user".id = "user1" OR "user".id = "user2"
+                      GROUP BY "chat_id", "chat_messages"
+                      `
 
   pool.query(fillUsernames, [Number(userId)])
     .then(response => {
@@ -124,6 +124,8 @@ function getChats(socket) {
 
       io.to(socket.id).emit('RECEIVE_ALL_CHATS', response.rows)
     }).catch(error => {
+      console.log(`sql error`);
+      
       console.log(error);
     })
 }
