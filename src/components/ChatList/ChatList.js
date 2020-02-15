@@ -31,6 +31,8 @@ class ChatList extends Component {
             <Grid container className={classes.root} spacing={2} justify='center'>
                 <Grid item xs={6}>
                     {chats.map((chat, index) => {
+                        console.log(`INDEX OF ${index}`);
+                        
                         let user1 = chat.participants[0]
                         let user2 = chat.participants[1]
                         let messages = chat.chat_messages;

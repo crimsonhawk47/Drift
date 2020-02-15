@@ -12,6 +12,7 @@ function* getMessages(action){
 
 function* chatSaga() {
     yield takeLatest('SEND_MESSAGE', sendMessage);
+    yield takeLatest('GET_MESSAGES', getMessages)
   }
   
   export default chatSaga;

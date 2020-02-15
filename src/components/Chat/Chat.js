@@ -46,6 +46,8 @@ class Chat extends Component {
 
         let index = this.props.match.params.index
         let chat = this.props.reduxStore.chats[index]
+        console.log(chat);
+        
         let chat_id = chat && chat.chat_id
         
         let myUser = this.props.reduxStore.user.username

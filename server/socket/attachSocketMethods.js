@@ -13,6 +13,15 @@ const attachSocketMethods = (socket, io, serverMethods) => {
     })
 
     socket.on('GET_MESSAGES', data=>{
+        console.log(socket);
+        console.log(`--------------`);
+        console.log(`--------------`);
+        console.log(`--------------`);
+        console.log(`--------------`);
+        console.log(`--------------`);
+        console.log(`--------------`);
+        
+        
         serverMethods.getChats(socket)
     })
 
