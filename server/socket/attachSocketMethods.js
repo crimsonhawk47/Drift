@@ -1,4 +1,5 @@
 const pool = require('../modules/pool')
+const moment = require('moment')
 const attachSocketMethods = (socket, io, serverMethods) => {
     socket.on('test', data => {
         console.log(`IN TEST`);
@@ -17,6 +18,10 @@ const attachSocketMethods = (socket, io, serverMethods) => {
         let socketIdSendingMessage = socket.id
 
         console.log(`-----------------`);
+        console.log('THE TIME IS');
+        console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+        
+        
         console.log(userId);
 
 
@@ -25,12 +30,10 @@ const attachSocketMethods = (socket, io, serverMethods) => {
         // console.log(socket.rooms);
         if (socket.rooms.hasOwnProperty(chatId)) {
 
-            let queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id")
-                            VALUES($1, $2, $3);`
+            let queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id", "date")
+                            VALUES($1, $2, $3, NOW());`
             pool.query(queryText, [message, chatId, userId])
                 .then(response => {
-                    console.log(response);
-
                     // console.log(`THE USER IS IN THIS ROOM, WE CAN SEND A MESSAGE`);
                     io.to(chatId).emit('NEW_MESSAGE')
                     // console.log(io.sockets[socket.id]);
