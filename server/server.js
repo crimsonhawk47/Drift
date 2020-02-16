@@ -42,6 +42,7 @@ const server = app.listen(PORT, () => {
 
 //SOCKET IO
 
+//We need this to use request.user in a socket
 const io = socket(server).use(function (socket, next) {
   // Wrap the express middleware
   sessionMiddleware(socket.request, {}, next);
@@ -55,34 +56,41 @@ io.on("connection", function (socket) {
     && socket.request.session.passport
     && socket.request.session.passport.user;
 
+  //If the user is authenticated
   if (userId) {
 
+    //Run the method that has that socket get all its chats
     getChats(socket)
-    attachSocketMethods(socket, io, {getChats: getChats})
+
+    //We are putting all our socket events in an external file.
+    //We pass a function everything it needs to attach those events
+    let serverMethods = { getChats: getChats }
+    attachSocketMethods(socket, io, serverMethods)
+
+    //Get all of the chats in SQL that the user appears to be in
     let queryText = `SELECT "id" from "chat"
                       WHERE "user1" = $1 OR "user2" = $1`
 
+    //
     pool.query(queryText, [userId])
       .then(result => {
         console.log(`----------------------------`);
-        
-        for (row of result.rows){
-          console.log(`this loop ran`);
-          
+
+        for (row of result.rows) {
+          //For each of the chats the user is in, join them to a
+          //room with the name of that chat ID
           socket.join(row.id)
           console.log(`socket is joining ${row.id}`);
         }
-        socket.to(1).emit('TEST', 'HI ROOM 1! SOMEONE NEW JUST JOINED THE THING')
-        console.log(`Emit should be done`);
-        console.log(`----------------------------`);
-        
 
-        
+        //As a test, each time any socket connects, we are telling Room1 someone connected
+        socket.to(1).emit('TEST', 'HI ROOM 1! SOMEONE NEW JUST JOINED THE THING')
+        console.log(`----------------------------`);
+
       })
       .catch(err => {
         console.log(err);
       })
-    // console.log("Your Passport is", userId);
   }
   else {
     console.log(`[SECURITY ISSUE] Socket Connection was attempted before user was authorized`);
@@ -120,12 +128,10 @@ function getChats(socket) {
 
   pool.query(fillUsernames, [Number(userId)])
     .then(response => {
-      // console.log(response.rows);
 
+      //RECEIVE_ALL_CHATS is a socket event on the client that will put data into the chats reducer
       io.to(socket.id).emit('RECEIVE_ALL_CHATS', response.rows)
     }).catch(error => {
-      console.log(`sql error`);
-      
       console.log(error);
     })
 }

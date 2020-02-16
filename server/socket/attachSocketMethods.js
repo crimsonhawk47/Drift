@@ -1,10 +1,6 @@
 const pool = require('../modules/pool')
 const moment = require('moment')
 const attachSocketMethods = (socket, io, serverMethods) => {
-    socket.on('test', data => {
-        console.log(`IN TEST`);
-
-    })
 
     socket.on('LOG_ME_OUT', data => {
         console.log(`LOGGING USER OUT`);
@@ -13,49 +9,53 @@ const attachSocketMethods = (socket, io, serverMethods) => {
     })
 
     socket.on('DELETE_MESSAGE', data => {
+        console.log(`IN DELETE_MESSAGE`);
+
         let userId = socket.request.session.passport.user
         let room;
+        //Grab the chat_id, which is synonymous with the room number
         pool.query(`SELECT "chat_id" FROM "messages"
         WHERE "messages".id = $1 AND "messages".user_id = $2`, [data, userId])
             .then(result => {
+                //There should only be one result, with a column of chat_id. This is the room
                 room = String(result.rows[0].chat_id)
-                console.log(room);
+                console.log('Setting Room to ', room);
+
+                //If we actually got the room the message is from
+                if (room) {
+                    console.log(`About to DELETE`);
+
+                    let queryText = `DELETE FROM "messages"
+                                    WHERE "messages".id = $1 AND "messages".user_id = $2`
+                    pool.query(queryText, [data, userId])
+                        .then(result => {
+                            console.log(result);
+                            //After deleting the message, we tell everyone in the room to update
+                            io.to(room).emit('GET_MESSAGES')
+
+                        }).catch(err => {
+                            console.log(err);
+                        })
+                }
             })
             .catch(err => {
                 console.log(err);
-
             })
 
-        let queryText = `DELETE FROM "messages"
-                        WHERE "messages".id = $1 AND "messages".user_id = $2`
-        pool.query(queryText, [data, userId])
-            .then(result => {
-                console.log(result);
-                io.to(room).emit('GET_MESSAGES')
 
-            }).catch(err => {
-                console.log(err);
 
-            })
+
+
 
     })
 
     socket.on('GET_MESSAGES', data => {
-        // console.log(socket);
-        // console.log(`--------------`);
-        // console.log(`--------------`);
-        // console.log(`--------------`);
-        // console.log(`--------------`);
-        // console.log(`--------------`);
-        // console.log(`--------------`);
-
-
+        //getChats sends all of the chats info needed to a socket
         serverMethods.getChats(socket)
     })
 
     socket.on('CHANGE_AVATAR', data => {
         let userId = socket.request.session.passport.user
-        // console.log(socket);
 
         console.log(socket.rooms);
 
@@ -88,28 +88,28 @@ const attachSocketMethods = (socket, io, serverMethods) => {
         console.log(userId);
 
 
-
-        // console.log(`THIS SOCKET HAS THESE ROOMS`);
-        // console.log(socket.rooms);
+        //The user will be sending the chatId from the client. We don't want to run any
+        //of this unless the chatId being sent is actually a room that socket is in. 
         if (socket.rooms.hasOwnProperty(chatId)) {
 
             let queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id", "date")
                             VALUES($1, $2, $3, NOW());`
             pool.query(queryText, [message, chatId, userId])
                 .then(response => {
-                    // console.log(`THE USER IS IN THIS ROOM, WE CAN SEND A MESSAGE`);
+                    //Tell the room that a message was sent
                     io.to(chatId).emit('NEW_MESSAGE')
-                    // console.log(io.sockets[socket.id]);
                     let listOfAllSocketObjects = io.sockets
                     let currentRoomSocketNames = io.adapter.rooms[chatId].sockets
-                    // console.log(io);
 
+                    //For every socket connected to that room (should only be two)
+                    //Roomsocket is a socket id...
                     for (roomSocket in currentRoomSocketNames) {
-                        // console.log(listOfAllSocketObjects[roomSocket]);
-                        serverMethods.getChats(listOfAllSocketObjects[roomSocket])
+                        //...Index the list of sockets with the roomSocket ID...
+                        let socketToUpdate = listOfAllSocketObjects[roomSocket]
+                        //...And update that sockets methods
+                        serverMethods.getChats(socketToUpdate)
                     }
 
-                    // serverMethods.getChats(socketThatSentMEssage)
 
                 }).catch(err => {
                     console.log(err);
