@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Paper, Grid, Typography, Input, Button, Avatar } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
@@ -33,6 +34,15 @@ class Chat extends Component {
         })
     }
 
+    deleteMessage = (id)=>{
+        console.log(`DELETING`);
+        this.props.dispatch({
+            type:'DELETE_MESSAGE',
+            payload: id
+        })
+        
+    }
+
     sendMessage = (chatId) => {
         this.props.dispatch({ type: 'SEND_MESSAGE', payload: {input: this.state.input, chatId: chatId} })
         this.setState({input: ''})
@@ -46,7 +56,6 @@ class Chat extends Component {
 
         let index = this.props.match.params.index
         let chat = this.props.reduxStore.chats[index]
-        console.log(chat);
         
         let chat_id = chat && chat.chat_id
         
@@ -58,7 +67,11 @@ class Chat extends Component {
                     partner = named;
                 }
             }
+            
         }
+        
+        
+        
         return (
             <Grid container className={classes.root} spacing={2} justify='center'>
                 {chat && chat.chat_messages.map((messageData, index) => {
@@ -71,6 +84,8 @@ class Chat extends Component {
                             <Grid container spacing={0} justify='flex-start'>
                             <Avatar src={img}></Avatar>
                                 <Paper>
+                                    {userSpeaking !== partner ?
+                                    <DeleteIcon onClick={() => this.deleteMessage(messageData.id)} /> : <p></p>}
                                     <Typography>{userSpeaking}: {message} ({date})</Typography>
                                 </Paper>
                             </Grid>

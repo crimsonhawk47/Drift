@@ -97,7 +97,7 @@ function getChats(socket) {
   let userId = socket.request.session.passport.user;
 
   //Selects messages and their users by chat and groups them into an array in one column
-  let combineMessagesText = `SELECT "chat".id as "chat_id", jsonb_build_object('message', "messages".message, 'username', "user".username, 'date', "messages".date, 'img', "user".image) as message_details, "messages".id as "message_id" FROM "chat"
+  let combineMessagesText = `SELECT "chat".id as "chat_id", jsonb_build_object('id', "messages".id, 'message', "messages".message, 'username', "user".username, 'date', "messages".date, 'img', "user".image) as message_details, "messages".id as "message_id" FROM "chat"
   JOIN "messages" ON "chat".id = "messages".chat_id
   JOIN "user" ON "user".id = "messages".user_id
   WHERE "chat".user1 = $1 OR "chat".user2=$1
