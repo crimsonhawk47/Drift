@@ -24,7 +24,6 @@ const attachSocketMethods = (socket, io, serverMethods) => {
                 //If we actually got the room the message is from
                 if (room) {
                     console.log(`About to DELETE`);
-
                     let queryText = `DELETE FROM "messages"
                                     WHERE "messages".id = $1 AND "messages".user_id = $2`
                     pool.query(queryText, [data, userId])
@@ -41,11 +40,6 @@ const attachSocketMethods = (socket, io, serverMethods) => {
             .catch(err => {
                 console.log(err);
             })
-
-
-
-
-
 
     })
 
