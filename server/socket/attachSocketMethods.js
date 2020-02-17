@@ -59,10 +59,11 @@ const attachSocketMethods = (socket, io, serverMethods) => {
                         WHERE "user".id = $2`
         pool.query(queryText, [data, userId])
             .then(result => {
-                io.to(socket.id).emit('UPDATE_AVATAR')
+                socket.emit('UPDATE_AVATAR')
+                socket.emit('GET_MESSAGES')
                 for (room in socket.rooms) {
                     if (socket.id !== room) {
-                        io.to(room).emit('GET_MESSAGES')
+                        socket.to(room).emit('GET_MESSAGES')
                     }
                 }
             })
