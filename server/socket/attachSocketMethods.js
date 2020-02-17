@@ -53,18 +53,21 @@ const attachSocketMethods = (socket, io, serverMethods) => {
 
         console.log(socket.rooms);
 
-
+        //Changing the avatar filepath
         let queryText = `UPDATE "user"
                         SET "image" = $1
                         WHERE "user".id = $2`
         pool.query(queryText, [data, userId])
             .then(result => {
+                //Tell the user to update their avatar by calling getUser
                 socket.emit('UPDATE_AVATAR')
+                //Tell the specific socket that changed their avatar to update their messages
                 socket.emit('GET_MESSAGES')
+                //For every room that socket is in
                 for (room in socket.rooms) {
-                    if (socket.id !== room) {
-                        socket.to(room).emit('GET_MESSAGES')
-                    }
+                    //have everyone that isn't that socket update their messages
+                    //Remember that the socket is in its own room as well, and it wont emit to itself
+                    socket.to(room).emit('GET_MESSAGES')
                 }
             })
     })
