@@ -85,6 +85,7 @@ const attachSocketMethods = (socket, io, serverMethods) => {
             }
             else if (Array.isArray(result)) {
                 console.log('No Chat Found, starting new chat');
+                
 
                 let queryText = `INSERT INTO "chat"
                         ("user1", "user2", "active")
@@ -117,6 +118,10 @@ const attachSocketMethods = (socket, io, serverMethods) => {
                             .catch(err => { console.log(err) })
                         if (chatFound) {
                             break;
+                        }
+                        if (socket.disconnected){
+                            console.log(`User disconnected before a match could be found`);
+                            break;   
                         }
 
                         const timer = ms => new Promise(res => setTimeout(res, ms));
