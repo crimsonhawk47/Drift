@@ -5,12 +5,11 @@ const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
 
 
-
 const router = express.Router();
 
 // Handles Ajax request for user information if user is authenticated
 router.get('/', rejectUnauthenticated, (req, res) => {
-  
+
   // Send back user object from the session (previously queried from the database)
   //REQ.USER is whatever gets "done" from deserializeUser in the user strategy file
   res.send(req.user);
@@ -19,7 +18,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 // Handles POST request with new user data
 // The only thing different from this and every other post we've seen
 // is that the password gets encrypted before being inserted
-router.post('/register', (req, res, next) => {  
+router.post('/register', (req, res, next) => {
   const username = req.body.username;
   const password = encryptLib.encryptPassword(req.body.password);
 
@@ -35,15 +34,13 @@ router.post('/register', (req, res, next) => {
 // this middleware will send a 404 if not successful
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
   // console.log(req.user);
-  
+
   res.sendStatus(200);
 });
 
 // clear all server session information about this user
 router.post('/logout', (req, res) => {
   console.log(req.user);
-  
-  
 
   // Use passport's built-in method to log out the user
   req.logout();
@@ -51,3 +48,5 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+
+
