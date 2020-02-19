@@ -128,6 +128,10 @@ function getChats(socket) {
 
   pool.query(fillUsernames, [Number(userId)])
     .then(response => {
+      console.log(`sending back chats`);
+      console.log(response.rows);
+      
+      
 
       //RECEIVE_ALL_CHATS is a socket event on the client that will put data into the chats reducer
       io.to(socket.id).emit('RECEIVE_ALL_CHATS', response.rows)

@@ -13,6 +13,7 @@ const findChat = (socket, io, serverMethods) => {
       if (chatResult) {
         console.log(`A chat was found`);
         socket.emit('CHAT_FOUND')
+        socket.emit('GET_MESSAGES')
       }
       else {
         console.log(`no chat was found`);
@@ -69,7 +70,7 @@ const checkForOpenChats = async (userId) => {
       for (row of allEmptyChatsResult.rows) {
         //If the id of this open chat is in the list of previous chats
         //Don't do anything. Else, put the relevant info into variables
-        if (listOfPreviousChats.includes(row.user1)) {
+        if (listOfPreviousChats && listOfPreviousChats.includes(row.user1)) {
           console.log(`Already have chatted with ${row.user1}`);
         }
         else {
@@ -100,6 +101,7 @@ const handleOpenChat = async (result, userId, socket) => {
       //...Join the user to the openChatId
 
       await joinChat(userId, result.openChatId);
+      await socket.join(result.openChatId)
 
 
     }
@@ -166,6 +168,7 @@ const monitorChat = async function (result, socket) {
 
     }
     if (chatFound) {
+      await socket.join(pendingChatId)
       console.log(`YOU ARE CONNECTED`);
       return Promise.resolve(true);
 
@@ -188,6 +191,10 @@ const joinChat = async (userId, openChatId) => {
             WHERE "chat".id = $2
             `, [userId, openChatId])
     console.log(`User ${userId} has joined room ${openChatId}`);
+    await pool.query(`INSERT INTO "messages" ("message", 
+                      "chat_id", "user_id", "date")
+                      VALUES($1, $2, $3, NOW())`,
+                      ['Test Message', openChatId, 2])
   } catch (err) { return Promise.reject(err) }
 }
 
