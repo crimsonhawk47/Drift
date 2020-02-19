@@ -22,7 +22,7 @@ const attachSocketMethods = (socket, io, serverMethods) => {
 
   socket.on('TEST_SLEEP', async data => {
     const timer = ms => new Promise(res => setTimeout(res, ms));
-    
+
 
     let sum = 1;
     async function test() {

@@ -84,7 +84,7 @@ class Chat extends Component {
               <Grid container spacing={0} justify='flex-start'>
                 <Avatar src={img}></Avatar>
                 <Paper>
-                  {userSpeaking !== partner ?
+                  {userSpeaking === myUser ?
                     <DeleteIcon onClick={() => this.deleteMessage(messageData.id)} /> : <p></p>}
                   <Typography>{userSpeaking}: {message} ({date})</Typography>
                 </Paper>

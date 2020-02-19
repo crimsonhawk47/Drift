@@ -14,8 +14,10 @@ function* deleteMessage(action){
 }
 
 function* findChat(){
-    yield socket.emit('FIND_CHAT')
-
+    yield socket.emit('FIND_CHAT', function(chatId){
+      alert(chatId)
+      put({ type: 'GET_MESSAGES' })
+    })
 }
 
 function* chatSaga() {

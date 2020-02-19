@@ -51,10 +51,11 @@ const setupSocket = () => {
       store.dispatch({ type: 'GET_MESSAGES' })
     })
 
-    // innerSocket.on('NOT_LOGGED_IN', () => {
-    //     console.log(`YOU DONT APPEAR TO BE LOGGED IN ANYMORE`);
 
-    // })
+    innerSocket.on('NOT_LOGGED_IN', () => {
+      console.log(`YOU DONT APPEAR TO BE LOGGED IN ANYMORE`);
+
+    })
 
     //Sets the outside socket, which we will export, to this innerSocket.
     socket = innerSocket

@@ -33,7 +33,7 @@ class ChatList extends Component {
 
 
           return (
-            <Grid item>
+            <Grid item key={index}>
               {/* <Grid item xs={6}> */}
 
 

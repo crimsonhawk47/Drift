@@ -1,8 +1,9 @@
 const pool = require('../modules/pool');
 
 
+
 const findChat = (socket, io, serverMethods) => {
-  socket.on('FIND_CHAT', async function (data) {
+  socket.on('FIND_CHAT', async function (chatSuccess) {
     let userId = socket.request.session.passport.user
     console.log(`--------------START--------------`);
     //Returns an object with info on whether a chat was open or not
@@ -12,8 +13,7 @@ const findChat = (socket, io, serverMethods) => {
       let chatResult = await handleOpenChat(result, userId, socket)
       if (chatResult) {
         console.log(`A chat was found`);
-        await socket.emit('CHAT_FOUND')
-        await socket.emit('GET_MESSAGES')
+        chatSuccess('A Chat Was Found');
       }
       else {
         console.log(`no chat was found`);
@@ -100,8 +100,9 @@ const handleOpenChat = async (result, userId, socket) => {
 
       //...Join the user to the openChatId
 
-      await joinChat(userId, result.openChatId);
+      let chatFound = await joinChat(userId, result.openChatId);
       await socket.join(result.openChatId)
+      return Promise.resolve(chatFound);
 
 
     }
@@ -194,7 +195,8 @@ const joinChat = async (userId, openChatId) => {
     await pool.query(`INSERT INTO "messages" ("message", 
                       "chat_id", "user_id", "date")
                       VALUES($1, $2, $3, NOW())`,
-                      ['Test Message', openChatId, 2])
+      ['Test Message', openChatId, 2])
+    return Promise.resolve(true)
   } catch (err) { return Promise.reject(err) }
 }
 
