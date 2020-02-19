@@ -83,7 +83,11 @@ const handleOpenChat = async (result, userId, socket) => {
       console.log(`Updating chat number ${result.openChatId} with "user2" of ${userId}`);
 
       //...Join the user to the openChatId
-      await joinChat(userId, result.openChatId);
+      try {
+        await joinChat(userId, result.openChatId);
+      } catch (err) {
+        return Promise.reject(err)
+      }
     }
     else {
       console.log(`You can't join a chat with yourself`);
@@ -129,10 +133,11 @@ const handleOpenChat = async (result, userId, socket) => {
 
 
 const monitorChat = async function (result, socket) {
-  let pendingChatId = result.rows[0].id
-  let chatFound = false;
-  for (let i = 0; i < 10; i++) {
-    try {
+  try {
+    let pendingChatId = result.rows[0].id
+    let chatFound = false;
+    for (let i = 0; i < 10; i++) {
+
       let user2Result = await pool.query(`SELECT "user2" FROM "chat"
                                           WHERE "id" = $1`, [pendingChatId])
       let partnerStatus = user2Result.rows[0].user2
@@ -140,53 +145,46 @@ const monitorChat = async function (result, socket) {
         console.log(`YAYYYY, NOW USER ${partnerStatus} IS JOINING`);
         chatFound = true;
       }
-    } catch (err) {
-      return Promise.reject(err);
-    }
-    if (socket.disconnected) {
-      console.log(`User disconnected before a match could be found`);
-      chatFound = false;
-      break;
+
+      if (socket.disconnected) {
+        console.log(`User disconnected before a match could be found`);
+        chatFound = false;
+        break;
+      }
+      if (chatFound) {
+        break;
+      }
+      console.log('waiting ', i, 'seconds');
+
+
+      const timer = ms => new Promise(res => setTimeout(res, ms));
+      await timer(1000)
+
     }
     if (chatFound) {
-      break;
+      console.log(`YOU ARE CONNECTED`);
+      return Promise.resolve(true)
+
     }
-    console.log('waiting ', i, 'seconds');
-
-
-    const timer = ms => new Promise(res => setTimeout(res, ms));
-    await timer(1000)
-
-  }
-  if (chatFound) {
-    console.log(`YOU ARE CONNECTED`);
-    return Promise.resolve(true)
-
-  }
-  else {
-    pool.query(`DELETE FROM "chat"
+    else {
+      await pool.query(`DELETE FROM "chat"
                     WHERE "id" = $1`, [pendingChatId])
-      .then(result => {
-        return Promise.reject('No Chats Were Found')
-      })
-      .catch(err => {
-        return Promise.reject(err)
-      })
+      return Promise.reject('No Chats Were Found')
+    }
+  } catch (err) {
+    return Promise.reject(err);
   }
 }
 
 
 const joinChat = async (userId, openChatId) => {
-  await pool.query(`UPDATE "chat"
+  try {
+    await pool.query(`UPDATE "chat"
             SET "user2" = $1
             WHERE "chat".id = $2
             `, [userId, openChatId])
-    .then(result => {
-      console.log(`User ${userId} has joined room ${openChatId}`);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+    console.log(`User ${userId} has joined room ${openChatId}`);
+  } catch (err) { Promise.reject(err) }
 }
 
 
