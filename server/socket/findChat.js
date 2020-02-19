@@ -12,12 +12,10 @@ const findChat = (socket, io, serverMethods) => {
       let chatResult = await handleOpenChat(result, userId, socket)
       if (chatResult) {
         console.log(`A chat was found`);
-
         socket.emit('CHAT_FOUND')
       }
       else {
         console.log(`no chat was found`);
-
         socket.emit('NO_CHAT_FOUND')
       }
 
@@ -41,6 +39,13 @@ const checkForOpenChats = async (userId) => {
   let selectEmptyChatsQuery = `SELECT * FROM "chat" WHERE "user2" is NULL`
   try {
     const emptyChatsResult = await pool.query(selectEmptyChatsQuery)
+
+    let currentSocketsEmptyChats = await pool.query(`SELECT COUNT(*) FROM "chat" 
+                                            WHERE "user2" is NULL AND "user1" = $1`, [userId])
+    currentSocketsEmptyChats = Number(currentSocketsEmptyChats.rows[0].count)
+    if (currentSocketsEmptyChats) {
+      return Promise.reject('User was already searching for a chat')
+    }
 
     //If it was not an empty array, we will compare open chats to chats the user has had
     if (emptyChatsResult.rows.length) {
