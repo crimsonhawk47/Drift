@@ -15,6 +15,8 @@ const sendMessage = (socket, io, serverMethods) => {
 
 
         console.log(userId);
+        console.log(socket.rooms);
+        
 
 
         //The user will be sending the chatId from the client. We don't want to run any
