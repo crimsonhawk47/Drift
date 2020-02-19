@@ -14,7 +14,7 @@ function* deleteMessage(action){
 }
 
 function* findChat(){
-    yield socket.emit('FIND_CHAT', function(chatId){
+    yield socket.emit('TEST_SLEEP', function(chatId){
       alert(chatId)
       put({ type: 'GET_MESSAGES' })
     })
