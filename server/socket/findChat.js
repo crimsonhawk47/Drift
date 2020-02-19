@@ -36,9 +36,9 @@ const checkForOpenChats = async (userId) => {
   let openChatId = false;
   let userToChatWith = 0;
   //Find all open chats
-  let selectEmptyChatsQuery = `SELECT * FROM "chat" WHERE "user2" is NULL`
+  let selectAllEmptyChatsQuery = `SELECT * FROM "chat" WHERE "user2" is NULL`
   try {
-    const emptyChatsResult = await pool.query(selectEmptyChatsQuery)
+    const allEmptyChatsResult = await pool.query(selectAllEmptyChatsQuery)
 
     let currentSocketsEmptyChats = await pool.query(`SELECT COUNT(*) FROM "chat" 
                                             WHERE "user2" is NULL AND "user1" = $1`, [userId])
@@ -48,7 +48,7 @@ const checkForOpenChats = async (userId) => {
     }
 
     //If it was not an empty array, we will compare open chats to chats the user has had
-    if (emptyChatsResult.rows.length) {
+    if (allEmptyChatsResult.rows.length) {
       //SELECTING A LIST OF CHATS OUR USER HAS ALREADY HAD
       let previousChatsText = `SELECT array_agg(
                             CASE WHEN "user1" = $1 
@@ -66,7 +66,7 @@ const checkForOpenChats = async (userId) => {
       console.log(listOfPreviousChats);
 
       //Row will be an openChat instance from sql
-      for (row of emptyChatsResult.rows) {
+      for (row of allEmptyChatsResult.rows) {
         //If the id of this open chat is in the list of previous chats
         //Don't do anything. Else, put the relevant info into variables
         if (listOfPreviousChats.includes(row.user1)) {
@@ -74,14 +74,9 @@ const checkForOpenChats = async (userId) => {
         }
         else {
           console.log(`HAVE NOT chatted with ${row.user1}`);
-          if (row.user1 !== userId) {
-            openChatId = row.id
-            userToChatWith = row.user1
-            break;
-          }
-          else {
-            console.log(`This is you though, You can't join a chat with yourself`);
-          }
+          openChatId = row.id
+          userToChatWith = row.user1
+          break;
 
         }
       }
