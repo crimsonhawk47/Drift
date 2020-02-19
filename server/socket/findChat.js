@@ -1,15 +1,19 @@
 const pool = require('../modules/pool');
 
-
 const findChat = (socket, io, serverMethods) => {
   socket.on('FIND_CHAT', async function (data) {
     let userId = socket.request.session.passport.user
     console.log(`--------------START--------------`);
     //Returns an object with info on whether a chat was open or not
-    const result = await checkForOpenChats(userId)
+    try {
+      const result = await checkForOpenChats(userId)
+      //Handles all of the logic for potential open chats
+      await handleOpenChat(result, userId, socket)
 
-    //Handles all of the logic for potential open chats
-    await handleOpenChat(result, userId, socket)
+    } catch (err) {
+      socket.emit('ERROR_IN_FIND_CHAT', err)
+      console.log(err);
+    }
 
     console.log(`------------END------------`);
 
@@ -23,57 +27,50 @@ const checkForOpenChats = async (userId) => {
   let userToChatWith = 0;
   //Find all open chats
   let selectEmptyChatsQuery = `SELECT * FROM "chat" WHERE "user2" is NULL`
-  await pool.query(selectEmptyChatsQuery)
-    .then(async emptyChatsResult => {
-      //If it's an empty array, there were no chats
-      if (!emptyChatsResult.rows.length) {
-        openChatId = emptyChatsResult.rows
+  try {
+    const emptyChatsResult = await pool.query(selectEmptyChatsQuery)
+    //If it's an empty array, there were no chats
+    if (!emptyChatsResult.rows.length) {
+      openChatId = emptyChatsResult.rows
+    }
+    //If it was not an empty array, we will compare open chats to chats the user has had
+    else {
+      //SELECTING A LIST OF CHATS OUR USER HAS ALREADY HAD
+      let previousChatsText = `SELECT array_agg(
+                            CASE WHEN "user1" = $1 
+                            THEN "user2"
+                            ELSE "user1"
+                            END) as users
+                            FROM "chat"
+                            WHERE ("user1" = $1 OR "user2" = $1) 
+                            AND ("user2" IS NOT NULL AND "user1" IS NOT NULL)`
+
+
+      const previousChatsResult = await pool.query(previousChatsText, [userId])
+      //This is just an array of chats the client has had
+      let listOfPreviousChats = previousChatsResult.rows[0].users
+      console.log(listOfPreviousChats);
+
+      //Row will be an openChat instance from sql
+      for (row of emptyChatsResult.rows) {
+        //If the id of this open chat is in the list of previous chats
+        //Don't do anything. Else, put the relevant info into variables
+        if (listOfPreviousChats.includes(row.user1)) {
+          console.log(`Already have chatted with ${row.user1}`);
+        }
+        else {
+          console.log(`HAVE NOT chatted with ${row.user1}`);
+          openChatId = row.id
+          userToChatWith = row.user1
+          break;
+        }
       }
-      //If it was not an empty array, we will compare open chats to chats the user has had
-      else {
-        //SELECTING A LIST OF CHATS OUR USER HAS ALREADY HAD
-        let previousChatsText = `SELECT array_agg(
-                                        CASE WHEN "user1" = $1 
-                                        THEN "user2"
-                                        ELSE "user1"
-                                        END) as users
-                                        FROM "chat"
-                                        WHERE ("user1" = $1 OR "user2" = $1) 
-                                        AND ("user2" IS NOT NULL AND "user1" IS NOT NULL)`
+    }
 
-
-        await pool.query(previousChatsText, [userId])
-          .then(previousChatsResult => {
-            //This is just an array of chats the client has had
-            let listOfPreviousChats = previousChatsResult.rows[0].users
-            console.log(listOfPreviousChats);
-
-            //Row will be an openChat instance from sql
-            for (row of emptyChatsResult.rows) {
-              //If the id of this open chat is in the list of previous chats
-              //Don't do anything. Else, put the relevant info into variables
-              if (listOfPreviousChats.includes(row.user1)) {
-                console.log(`Already have chatted with ${row.user1}`);
-              }
-              else {
-                console.log(`HAVE NOT chatted with ${row.user1}`);
-                openChatId = row.id
-                userToChatWith = row.user1
-                break;
-              }
-            }
-          })
-          .catch(err => {
-            console.log(err);
-
-          })
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    })
-
-  return Promise.resolve({ openChatId, userToChatWith })
+    return Promise.resolve({ openChatId, userToChatWith })
+  } catch (err) {
+    return Promise.reject(err)
+  }
 
 }
 
@@ -108,17 +105,21 @@ const handleOpenChat = async (result, userId, socket) => {
     //We will create a new chat that will pass the info of the sql row to 
     //Monitor chat. This will check the sql row every second to see if the second user
     //was filled by something like joinChat from a second socket.
-    await pool.query(queryText, [userId])
-      .then(async result => { await monitorChat(result, socket) })
-      .catch(err => { console.log(err) })
+    try {
+      let newlyOpenedChatResult = await pool.query(queryText, [userId])
+      await monitorChat(newlyOpenedChatResult, socket)
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 
 
   else if (result.openChatId === false) {
-    console.log(`Something went wrong checkForOpenChats`);
+    return Promise.reject(`Something went wrong checkForOpenChats`);
   }
   else {
-    console.log(`checkForOpenChats didnt find anything [VERY BAD!!!!!!!]`);
+    return Promise.reject(`checkForOpenChats didnt find anything [VERY BAD!!!!!!!]`);
+
   }
 
 
@@ -128,19 +129,20 @@ const handleOpenChat = async (result, userId, socket) => {
 
 
 const monitorChat = async function (result, socket) {
-  let id = result.rows[0].id
+  let pendingChatId = result.rows[0].id
   let chatFound = false;
   for (let i = 0; i < 10; i++) {
-    await pool.query(`SELECT "user2" FROM "chat"
-                WHERE "id" = $1`, [id])
-      .then(result => {
-        let user2 = result.rows[0].user2
-        if (user2) {
-          console.log(`YAYYYY, NOW USER ${user2} IS JOINING`);
-          chatFound = true;
-        }
-      })
-      .catch(err => { console.log(err) })
+    try {
+      let user2Result = await pool.query(`SELECT "user2" FROM "chat"
+                                          WHERE "id" = $1`, [pendingChatId])
+      let partnerStatus = user2Result.rows[0].user2
+      if (partnerStatus) {
+        console.log(`YAYYYY, NOW USER ${partnerStatus} IS JOINING`);
+        chatFound = true;
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
     if (socket.disconnected) {
       console.log(`User disconnected before a match could be found`);
       chatFound = false;
@@ -158,12 +160,19 @@ const monitorChat = async function (result, socket) {
   }
   if (chatFound) {
     console.log(`YOU ARE CONNECTED`);
+    return Promise.resolve(true)
+
   }
   else {
     pool.query(`DELETE FROM "chat"
-                    WHERE "id" = $1`, [id])
+                    WHERE "id" = $1`, [pendingChatId])
+      .then(result => {
+        return Promise.reject('No Chats Were Found')
+      })
+      .catch(err => {
+        return Promise.reject(err)
+      })
   }
-  return Promise.resolve(true)
 }
 
 
@@ -177,7 +186,6 @@ const joinChat = async (userId, openChatId) => {
     })
     .catch(err => {
       console.log(err);
-
     })
 }
 
