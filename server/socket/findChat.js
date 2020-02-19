@@ -12,12 +12,12 @@ const findChat = (socket, io, serverMethods) => {
       let chatResult = await handleOpenChat(result, userId, socket)
       if (chatResult) {
         console.log(`A chat was found`);
-        socket.emit('CHAT_FOUND')
-        socket.emit('GET_MESSAGES')
+        await socket.emit('CHAT_FOUND')
+        await socket.emit('GET_MESSAGES')
       }
       else {
         console.log(`no chat was found`);
-        socket.emit('NO_CHAT_FOUND')
+        await socket.emit('NO_CHAT_FOUND')
       }
 
     } catch (err) {
