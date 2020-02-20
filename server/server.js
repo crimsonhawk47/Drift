@@ -150,7 +150,7 @@ cron.schedule('* * * * * ', () => {
     .then(async result => {
       console.log(result.rows);
       for (chat of result.rows) {
-        let chatDate = Number(moment(chat.expiration).format('X')) / 60 / 60 / 24
+        let chatDate = Number(moment(chat.start_date).format('X')) / 60 / 60 / 24
         let currentDate = moment().format('X') / 60 / 60 / 24
         console.log(chatDate);
         console.log(currentDate);
