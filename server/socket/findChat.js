@@ -2,6 +2,7 @@ const pool = require('../modules/pool');
 
 
 
+
 const findChat = (socket, io, serverMethods) => {
   socket.on('FIND_CHAT', async function (chatSuccess) {
     let userId = socket.request.session.passport.user
@@ -165,6 +166,8 @@ const monitorChat = async function (result, socket) {
 
 
       const timer = ms => new Promise(res => setTimeout(res, ms));
+      //The code from other functions will only run when we are waiting for a promise. 
+      //So without this promise timer down here, we would not have anything async going
       await timer(1000)
 
     }

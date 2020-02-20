@@ -4,6 +4,7 @@ const deleteMessage = require('./deleteMessageSocket')
 const changeAvatar = require('./changeAvatarSocket')
 const findChat = require('./findChat')
 const moment = require('moment')
+let x = 0
 const attachSocketMethods = (socket, io, serverMethods) => {
 
 
@@ -15,32 +16,50 @@ const attachSocketMethods = (socket, io, serverMethods) => {
 
 
 
-  socket.on('GET_MESSAGES', data => {
+  socket.on('GET_MESSAGES', async data => {
     //getChats sends all of the chats info needed to a socket
     serverMethods.getChats(socket)
   })
 
+
   socket.on('TEST_SLEEP', async data => {
-    const timer = ms => new Promise(res => setTimeout(res, ms));
+    console.log(`this has run`, x, ` times`);
+    x++
 
+    // const timer = ms => new Promise(res => setTimeout(res, ms));
 
-    let sum = 1;
-    async function test() {
-      for (let i = 1; i < 550000000; i++) {
-        sum = sum * i;
-        // await timer(1)
-        // await new Promise(res => setTimeout(res, 1))
-        // console.log(sum);
-
-        // Promise.resolve(3)
-        // await pool.query('select * from "messages"')
-      }
-      Promise.resolve(3)
+    const timer = () => {
+      return new Promise(res => {
+        {
+          for (let i = 2; i < 450000000; i++) {
+            sum = sum * i
+          }
+          console.log(`past for loop`);
+          
+          setTimeout(() => {res('did it')}, 3000)
+        }
+      });
     }
-    let x = await test()
-    console.log(`DONE`);
+
+    let sum = 3;
+
+    
+
+    const test = async () => {
+      // await Promise.resolve(3)
+      let x = await timer()
+      console.log(x);
+
+    }
+
+    await test();
+
+    
+
+    
 
 
+    console.log(`---------DONE---------`);
   })
 
 
