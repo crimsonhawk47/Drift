@@ -3,6 +3,7 @@ import { Paper, Grid, Typography, Input, Button, Avatar } from '@material-ui/cor
 import DeleteIcon from '@material-ui/icons/Delete'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
+import moment from 'moment'
 
 const styles = theme => ({
 
@@ -78,6 +79,9 @@ class Chat extends Component {
           let message = messageData.message
           let userSpeaking = messageData.username
           let date = messageData.date
+          
+          date = moment(date).format('LT, LL')
+          
           let img = messageData.img
           return (
             <Grid item xs={7} key={index}>
