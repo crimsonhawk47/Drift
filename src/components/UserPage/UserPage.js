@@ -12,6 +12,7 @@ const findChat = (props) => {
   props.dispatch({
     type: 'FIND_CHAT'
   })
+  props.history.push('/loading')
 }
 
 const UserPage = (props) => (

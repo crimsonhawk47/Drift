@@ -19,6 +19,7 @@ import InfoPage from '../InfoPage/InfoPage';
 import ChatList from '../ChatList/ChatList'
 import Chat from '../Chat/Chat'
 import AvatarPicker from '../AvatarPicker/AvatarPicker'
+import Loading from '../Loading/Loading'
 
 import './App.css';
 
@@ -73,6 +74,11 @@ class App extends Component {
               exact
               path="/avatar"
               component={AvatarPicker}
+            />
+            <ProtectedRoute
+              exact
+              path="/loading"
+              component={Loading}
             />
             {/* If none of the other routes matched, we will show a 404. */}
             <Route render={() => <h1>404</h1>} />
