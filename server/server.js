@@ -8,6 +8,8 @@ const sessionMiddleware = require('./modules/session-middleware');
 const socket = require('socket.io')
 const pool = require('./modules/pool');
 const attachSocketMethods = require('./socket/attachSocketMethods')
+const cron = require('node-cron')
+const moment = require('moment')
 
 
 const passport = require('./strategies/user.strategy');
@@ -108,7 +110,7 @@ function getChats(socket) {
   let combineMessagesText = `SELECT "chat".id as "chat_id", jsonb_build_object('id', "messages".id, 'message', "messages".message, 'username', "user".username, 'date', "messages".date, 'img', "user".image) as message_details, "messages".id as "message_id" FROM "chat"
   JOIN "messages" ON "chat".id = "messages".chat_id
   JOIN "user" ON "user".id = "messages".user_id
-  WHERE "chat".user1 = $1 OR "chat".user2=$1
+  WHERE ("chat".user1 = $1 OR "chat".user2=$1) AND "chat".active = TRUE
   ORDER BY "messages".id`
 
   //Creates an array of chat objects with four properties: 
@@ -130,14 +132,41 @@ function getChats(socket) {
     .then(response => {
       console.log(`sending back chats`);
       console.log(response.rows);
-      
-      
+
+
 
       //RECEIVE_ALL_CHATS is a socket event on the client that will put data into the chats reducer
-      io.to(socket.id).emit('RECEIVE_ALL_CHATS', response.rows)
+      socket.emit('RECEIVE_ALL_CHATS', response.rows)
     }).catch(error => {
       console.log(error);
     })
 }
+
+
+
+cron.schedule('* * * * * ', () => {
+  pool.query(`SELECT * FROM "chat"
+            WHERE "active" = true`)
+    .then(async result => {
+      console.log(result.rows);
+      for (chat of result.rows) {
+        let chatDate = Number(moment(chat.expiration).format('X')) / 60 / 60 / 24
+        let currentDate = moment().format('X') / 60 / 60 / 24
+        console.log(chatDate);
+        console.log(currentDate);
+        if (currentDate - chatDate > 1) {
+          console.log(`Making the chat inactive`);
+          try {
+            await pool.query(`UPDATE "chat"
+                  SET "active" = false
+                  WHERE "id" = $1`, [chat.id])
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    })
+});
+
 
 
