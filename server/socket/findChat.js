@@ -114,8 +114,8 @@ const handleOpenChat = async (result, userId, socket) => {
 
 
       let queryText = `INSERT INTO "chat"
-                ("user1", "user2", "active")
-                VALUES($1, NULL, TRUE)
+                ("user1", "user2", "active", "start_date")
+                VALUES($1, NULL, TRUE, NOW())
                 RETURNING id`
 
       //We will create a new chat that will pass the info of the sql row to 
@@ -198,7 +198,7 @@ const joinChat = async (userId, openChatId) => {
     await pool.query(`INSERT INTO "messages" ("message", 
                       "chat_id", "user_id", "date")
                       VALUES($1, $2, $3, NOW())`,
-      ['Test Message', openChatId, 2])
+      ['Test Message', openChatId, 1])
     return Promise.resolve(true)
   } catch (err) { return Promise.reject(err) }
 }
