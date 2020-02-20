@@ -22,39 +22,46 @@ const attachSocketMethods = (socket, io, serverMethods) => {
   })
 
 
-
-
-
-
   socket.on('TEST_SLEEP', async data => {
     console.log(`this has run`, x, ` times`);
     x++
 
     // const timer = ms => new Promise(res => setTimeout(res, ms));
 
-    // const timer = () => {
-    //   return new Promise(res => {
-    //     setTimeout(() => res('I did something'), 3000)
-    //   });
-    // }
+    const timer = () => {
+      return new Promise(res => {
+        {
+          for (let i = 2; i < 450000000; i++) {
+            sum = sum * i
+          }
+          console.log(`past for loop`);
+          
+          setTimeout(() => {res('did it')}, 3000)
+        }
+      });
+    }
 
-    let sum = 1;
+    let sum = 3;
+
+    
 
     const test = async () => {
       // await Promise.resolve(3)
-      await timer(10000)
+      let x = await timer()
+      console.log(x);
+
     }
 
     await test();
 
-    // await timer(4000)
+    
+
+    
+
 
     console.log(`---------DONE---------`);
   })
 
-
-
-  
 
   findChat(socket, io, serverMethods)
   changeAvatar(socket, io, serverMethods);
