@@ -114,7 +114,7 @@ function getChats(socket) {
   ORDER BY "messages".id`
 
   //Creates an array of chat objects with four properties: 
-  //The chat id, an array of messages, and the user ID's of both participants
+  //The chat id, an array of messages, and the user ID's of boeth participants
   let combineMessagesByChat = `SELECT "chat_id",jsonb_agg("foo".message_details ORDER BY foo."message_id") as chat_messages, "chat".user1, "chat".user2, "chat".active from (${combineMessagesText})
                               as foo
                               JOIN "chat" ON "chat_id" = "chat".id

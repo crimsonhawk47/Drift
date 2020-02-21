@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Paper, Grid, Typography } from '@material-ui/core'
+import { Paper, Grid, Typography, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 
@@ -45,27 +45,18 @@ class ChatList extends Component {
 
             return (
               <Grid item key={index}>
-                {/* <Grid item xs={6}> */}
-
-
                 <Paper elevation={5} key={index} onClick={() => { this.goToChat(index) }}>
-                  {/* <Grid container justify='center'> */}
                   <Typography >
                     Chatting with {myUser === user1 ? user2 : user1}
                   </Typography>
                   <Typography>Last Message: {lastMessage}</Typography>
-                  {/* </Grid> */}
                 </Paper>
-                {/* </Grid> */}
               </Grid>
-
-
-
             )
           })}
 
         </Grid>
-        <button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</button>
+        <Button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
       </div>
 
 

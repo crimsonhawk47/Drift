@@ -12,11 +12,11 @@ const styles = theme => ({
 
 class Loading extends Component {
   //Will run if reduxUpdates
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.props.history.push('/home')
   }
 
-  
+
 
   render() {
     const { classes } = this.props;
@@ -24,8 +24,8 @@ class Loading extends Component {
     return (
       <Grid container className={classes.root}>
         <Typography >
-          I am a Loading Component
-                </Typography>
+          Loading...
+        </Typography>
       </Grid>
     )
 

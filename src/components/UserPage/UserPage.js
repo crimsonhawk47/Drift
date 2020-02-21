@@ -17,7 +17,7 @@ const UserPage = (props) => (
       <Avatar onClick={() => { props.history.push('/avatar') }} src={props.user.image} />Welcome, {props.user.username}!
     </h1>
     <ChatList />
-    <p>Your ID is: {props.user.id}</p>
+    {/* <p>Your ID is: {props.user.id}</p> */}
     <LogOutButton className="log-in" />
   </div>
 );

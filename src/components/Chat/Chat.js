@@ -17,6 +17,9 @@ const styles = theme => ({
   rightChat: {
 
   },
+  message:{
+    margin: '20px'
+  },
   scroll: {
     overflow: 'scroll',
     height: '400px',
@@ -109,13 +112,15 @@ class Chat extends Component {
 
             let img = messageData.img
             return (
-              <Grid item xs={7} key={index}>
+              <Grid item xs={7} key={index} className={classes.message}>
                 <Grid container spacing={0} justify='flex-start'>
                   <Avatar src={img}></Avatar>
                   <Paper>
                     {userSpeaking === myUser && active ?
                       <DeleteIcon onClick={() => this.deleteMessage(messageData.id, chat_id)} /> : <p></p>}
-                    <Typography>{userSpeaking}: {message} ({date})</Typography>
+                    <Typography>{userSpeaking}: {message}</Typography>
+                    <Typography>({date})</Typography>
+
                   </Paper>
                 </Grid>
               </Grid>
