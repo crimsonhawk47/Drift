@@ -7,6 +7,9 @@ import { withRouter } from 'react-router-dom'
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  findChat: {
+    marginTop: '30px'
   }
 });
 
@@ -18,41 +21,54 @@ class ChatList extends Component {
     this.props.history.push(`/chat/${index}`)
   }
 
+  findChat = () => {
+    this.props.dispatch({
+      type: 'FIND_CHAT'
+    })
+    this.props.history.push('/loading')
+  }
+
   render() {
     const { classes } = this.props;
     let chats = this.props.reduxStore.chats
     let myUser = this.props.reduxStore.user.username
     return (
-      <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
-        {chats.map((chat, index) => {
+      <div>
+        <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
+          {chats.map((chat, index) => {
 
-          let user1 = chat.participants[0]
-          let user2 = chat.participants[1]
-          let messages = chat.chat_messages;
-          let lastMessage = messages[messages.length - 1].message
-
-
-          return (
-            <Grid item key={index}>
-              {/* <Grid item xs={6}> */}
+            let user1 = chat.participants[0]
+            let user2 = chat.participants[1]
+            let messages = chat.chat_messages;
+            let lastMessage = messages[messages.length - 1].message
 
 
-              <Paper elevation={5} key={index} onClick={() => { this.goToChat(index) }}>
-                {/* <Grid container justify='center'> */}
-                <Typography >
-                  Chatting with {myUser === user1 ? user2 : user1}
-                </Typography>
-                <Typography>Last Message: {lastMessage}</Typography>
+            return (
+              <Grid item key={index}>
+                {/* <Grid item xs={6}> */}
+
+
+                <Paper elevation={5} key={index} onClick={() => { this.goToChat(index) }}>
+                  {/* <Grid container justify='center'> */}
+                  <Typography >
+                    Chatting with {myUser === user1 ? user2 : user1}
+                  </Typography>
+                  <Typography>Last Message: {lastMessage}</Typography>
+                  {/* </Grid> */}
+                </Paper>
                 {/* </Grid> */}
-              </Paper>
-              {/* </Grid> */}
-            </Grid>
+              </Grid>
 
 
 
-          )
-        })}
-      </Grid>
+            )
+          })}
+
+        </Grid>
+        <button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</button>
+      </div>
+
+
     )
 
   }
