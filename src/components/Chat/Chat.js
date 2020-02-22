@@ -34,6 +34,13 @@ class Chat extends Component {
     input: '',
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      let scrollAnchor = document.getElementById("scroll-anchor");
+      scrollAnchor.scrollTop = scrollAnchor.scrollHeight
+    }, 100)
+  }
+
   goHome = () => {
     this.props.history.push('/home')
   }
@@ -47,6 +54,10 @@ class Chat extends Component {
   sendMessage = (chatId) => {
     this.props.dispatch({ type: 'SEND_MESSAGE', payload: { input: this.state.input, chatId: chatId } })
     this.setState({ input: '' })
+    setTimeout(() => {
+      let scrollAnchor = document.getElementById("scroll-anchor");
+      scrollAnchor.scrollTop = scrollAnchor.scrollHeight
+    }, 100)
 
   }
 
@@ -59,13 +70,21 @@ class Chat extends Component {
 
   }
 
-  scrollToBottom = () => {
-    let scrollAnchor = document.getElementById("scroll-anchor");
-    if (scrollAnchor) {
-      scrollAnchor.scrollIntoView({
-        block: 'end'
-      });
+  // scrollToBottom = () => {
+  //   let scrollAnchor = document.getElementById("scroll-anchor");
+  //   if (scrollAnchor) {
+  //     scrollAnchor.scrollIntoView({
+  //       block: 'end'
+  //     });
+  //   }
+  // }
+
+  keyPress = (event, chat_id) => {
+    console.log(event.keyCode);
+    if (event.keyCode === 13) {
+      this.sendMessage(chat_id)
     }
+
   }
 
   typeScroll = () => {
@@ -145,7 +164,13 @@ class Chat extends Component {
                 placeholder='Send a message'
                 value={this.state.input}
                 fullWidth
-                endAdornment={<SendIcon onClick={() => { this.sendMessage(chat_id) }}>Send Message</SendIcon>} />
+                endAdornment={
+                  <SendIcon onClick={() => { this.sendMessage(chat_id) }}>
+                    Send Message
+                  </SendIcon>
+                }
+                onKeyDown={(event) => { this.keyPress(event, chat_id) }}
+              />
               <Button onClick={this.goHome}>GO BACK HOME</Button>
             </div> :
             <p></p>}
