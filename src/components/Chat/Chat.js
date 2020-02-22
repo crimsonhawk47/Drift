@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Paper, Grid, Typography, Input, Button, Avatar } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { withStyles } from '@material-ui/core/styles'
+import SendIcon from '@material-ui/icons/Send';
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { Element } from 'react-scroll';
@@ -11,18 +12,15 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  leftChat: {
-
-  },
-  rightChat: {
-
-  },
-  message:{
+  message: {
     margin: '20px'
   },
   scroll: {
     overflow: 'scroll',
-    height: '400px',
+    height: '300px',
+    margin: '20px'
+  },
+  timer: {
     margin: '20px'
   }
 });
@@ -31,8 +29,6 @@ const styles = theme => ({
 
 
 class Chat extends Component {
-
-
 
   state = {
     input: '',
@@ -48,6 +44,12 @@ class Chat extends Component {
     })
   }
 
+  sendMessage = (chatId) => {
+    this.props.dispatch({ type: 'SEND_MESSAGE', payload: { input: this.state.input, chatId: chatId } })
+    this.setState({ input: '' })
+
+  }
+
   deleteMessage = (id, chatId) => {
     console.log(`DELETING`);
     this.props.dispatch({
@@ -60,27 +62,21 @@ class Chat extends Component {
   scrollToBottom = () => {
     let scrollAnchor = document.getElementById("scroll-anchor");
     if (scrollAnchor) {
-      scrollAnchor.scrollTo({
-        top: scrollAnchor.scrollHeight,
-        behavior: 'auto'
-      })
-
+      scrollAnchor.scrollIntoView({
+        block: 'end'
+      });
     }
   }
 
-  sendMessage = (chatId) => {
-    this.props.dispatch({ type: 'SEND_MESSAGE', payload: { input: this.state.input, chatId: chatId } })
-    this.setState({ input: '' })
+  typeScroll = () => {
+    let inputAnchor = document.getElementById('inputAnchor')
+    console.log(inputAnchor);
+    setTimeout(() => { inputAnchor.scrollIntoView() }, 1000);
 
   }
+
 
   render() {
-
-
-
-    if (this.messagesEnd) {
-
-    }
     const { classes } = this.props;
 
     let index = this.props.match.params.index
@@ -88,6 +84,14 @@ class Chat extends Component {
 
     let chat_id = chat && chat.chat_id
     let active = chat && chat.active
+    let chat_date = chat && chat.chat_date
+    let timeLeft;
+    if (chat && chat.chat_date) {
+      timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
+    }
+
+
+
 
     let myUser = this.props.reduxStore.user.username
     let partner;
@@ -102,6 +106,10 @@ class Chat extends Component {
 
     return (
       <Grid container className={classes.root} spacing={2} justify='center'>
+        {active ?
+          <Typography className={classes.timer}>You have {timeLeft} Hours left!</Typography> :
+          <div></div>
+        }
         <div className={classes.scroll} id='scroll-anchor'>
           {chat && chat.chat_messages.map((messageData, index) => {
             let message = messageData.message
@@ -127,19 +135,21 @@ class Chat extends Component {
             )
           })}
         </div>
-        <div ref={this.messagesEndRef}></div>
+        <div></div>
         <Grid item xs={11} container justify="center">
           {active ?
             <div>
               <Input
+                onClick={this.typeScroll}
                 onChange={(event) => { this.handleChangeFor(event, 'input') }}
                 placeholder='Send a message'
                 value={this.state.input}
-                fullWidth />
-              <Button onClick={() => { this.sendMessage(chat_id) }}>Send Message</Button>
+                fullWidth
+                endAdornment={<SendIcon onClick={() => { this.sendMessage(chat_id) }}>Send Message</SendIcon>} />
               <Button onClick={this.goHome}>GO BACK HOME</Button>
             </div> :
             <p></p>}
+          <div id='inputAnchor'></div>
 
         </Grid>
 
