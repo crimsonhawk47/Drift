@@ -8,12 +8,7 @@ import ChatList from '../ChatList/ChatList'
 // this could also be written with destructuring parameters as:
 // const UserPage = ({ user }) => (
 // and then instead of `props.user.username` you could use `user.username`
-const findChat = (props) => {
-  props.dispatch({
-    type: 'FIND_CHAT'
-  })
-  props.history.push('/loading')
-}
+
 
 const UserPage = (props) => (
 
@@ -22,8 +17,7 @@ const UserPage = (props) => (
       <Avatar onClick={() => { props.history.push('/avatar') }} src={props.user.image} />Welcome, {props.user.username}!
     </h1>
     <ChatList />
-    <button onClick={() => { findChat(props) }}>FIND CHAT</button>
-    <p>Your ID is: {props.user.id}</p>
+    {/* <p>Your ID is: {props.user.id}</p> */}
     <LogOutButton className="log-in" />
   </div>
 );

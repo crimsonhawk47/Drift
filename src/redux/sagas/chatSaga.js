@@ -17,8 +17,6 @@ function* deleteMessage(action) {
 function* findChat() {
   yield socket.emit('FIND_CHAT', function (chatId) {
     store.dispatch({ type: 'GET_MESSAGES' })
-    alert(chatId)
-
   })
 }
 

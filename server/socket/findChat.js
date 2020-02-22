@@ -144,7 +144,7 @@ const monitorChat = async function (result, socket) {
   try {
     let pendingChatId = result.rows[0].id
     let chatFound = false;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 60; i++) {
 
       let user2Result = await pool.query(`SELECT "user2" FROM "chat"
                                           WHERE "id" = $1`, [pendingChatId])
@@ -198,7 +198,7 @@ const joinChat = async (userId, openChatId) => {
     await pool.query(`INSERT INTO "messages" ("message", 
                       "chat_id", "user_id", "date")
                       VALUES($1, $2, $3, NOW())`,
-      ['Test Message', openChatId, 1])
+      ['You are connected', openChatId, 1])
     return Promise.resolve(true)
   } catch (err) { return Promise.reject(err) }
 }
