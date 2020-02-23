@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Paper, Grid, Typography, Input, Button, Avatar } from '@material-ui/core'
+import { Paper, Grid, Typography, Input, Button, Avatar, Box } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { withStyles } from '@material-ui/core/styles'
 import SendIcon from '@material-ui/icons/Send';
@@ -22,6 +22,10 @@ const styles = theme => ({
   },
   timer: {
     margin: '20px'
+  },
+  date: {
+    fontSize: '12px',
+    fontStyle: 'italic'
   }
 });
 
@@ -146,8 +150,7 @@ class Chat extends Component {
                     {userSpeaking === myUser && active ?
                       <DeleteIcon onClick={() => this.deleteMessage(messageData.id, chat_id)} /> : <p></p>}
                     <Typography>{userSpeaking}: {message}</Typography>
-                    <Typography>({date})</Typography>
-
+                    <Typography className={classes.date}>{date}</Typography>
                   </Paper>
                 </Grid>
               </Grid>

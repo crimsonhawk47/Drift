@@ -60,7 +60,7 @@ class ChatList extends Component {
                     <Box marginLeft={2}>
                       <Grid container spacing={7}>
                         <Grid item xs={2}>
-                          <Avatar src={partnerAvatar}></Avatar>
+                          <Avatar src={partnerAvatar} />
                           <Typography >
                             {myUser === user1 ? user2 : user1}
                           </Typography>
