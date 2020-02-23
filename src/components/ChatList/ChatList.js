@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Paper, Grid, Typography, Button } from '@material-ui/core'
+import { Paper, Grid, Typography, Button, Avatar } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 
@@ -41,11 +41,17 @@ class ChatList extends Component {
             let user2 = chat.participants[1]
             let messages = chat.chat_messages;
             let lastMessage = messages[messages.length - 1].message
-
-
+            let partnerAvatar;
+            for (let message of chat.chat_messages) {
+              if (message.username !== myUser && message.username !== 'kenbot') {
+                partnerAvatar = message.img
+              }
+            }
             return (
               <Grid item key={index}>
                 <Paper elevation={5} key={index} onClick={() => { this.goToChat(index) }}>
+                  <Avatar src={partnerAvatar}></Avatar>
+
                   <Typography >
                     Chatting with {myUser === user1 ? user2 : user1}
                   </Typography>

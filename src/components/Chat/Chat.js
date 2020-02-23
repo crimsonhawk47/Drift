@@ -17,7 +17,7 @@ const styles = theme => ({
   },
   scroll: {
     overflow: 'scroll',
-    height: '300px',
+    height: '350px',
     margin: '20px'
   },
   timer: {
@@ -57,7 +57,7 @@ class Chat extends Component {
     setTimeout(() => {
       let scrollAnchor = document.getElementById("scroll-anchor");
       scrollAnchor.scrollTop = scrollAnchor.scrollHeight
-    }, 100)
+    }, 180)
 
   }
 
@@ -164,6 +164,7 @@ class Chat extends Component {
                 placeholder='Send a message'
                 value={this.state.input}
                 fullWidth
+                multiline
                 endAdornment={
                   <SendIcon onClick={() => { this.sendMessage(chat_id) }}>
                     Send Message
