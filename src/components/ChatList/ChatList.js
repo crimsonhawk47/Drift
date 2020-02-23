@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Paper, Grid, Typography, Button, Avatar } from '@material-ui/core'
+import { Paper, Grid, Typography, Button, Avatar, Box, Card } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 
@@ -54,20 +54,26 @@ class ChatList extends Component {
               }
             }
             return (
-              <Grid item key={index} onClick={() => { this.goToChat(index) }}>
-                <Grid container spacing={7}>
-                  <Grid item xs={2}>
-                  <Avatar src={partnerAvatar}></Avatar>
-
-                    <Typography >
-                      {myUser === user1 ? user2 : user1}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={7}>
-                    <Typography xs={2}>Last Message: {lastMessage}</Typography>
-                  </Grid>
+              <Box margin={4} marginRight={9}>
+                <Grid item key={index} onClick={() => { this.goToChat(index) }}>
+                  <Card>
+                    <Box marginLeft={2}>
+                      <Grid container spacing={7}>
+                        <Grid item xs={2}>
+                          <Avatar src={partnerAvatar}></Avatar>
+                          <Typography >
+                            {myUser === user1 ? user2 : user1}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={7}>
+                          <Typography xs={2}>Last Message: {lastMessage}</Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Card>
                 </Grid>
-              </Grid>
+              </Box>
+
             )
           })}
 
