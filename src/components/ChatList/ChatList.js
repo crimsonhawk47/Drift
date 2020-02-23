@@ -10,6 +10,12 @@ const styles = theme => ({
   },
   findChat: {
     marginTop: '30px'
+  },
+  wordWrap: {
+    wordWrap: 'break-word'
+  },
+  centered: {
+    justifyContent: 'flex-end'
   }
 });
 
@@ -33,53 +39,50 @@ class ChatList extends Component {
     let chats = this.props.reduxStore.chats
     let myUser = this.props.reduxStore.user.username
     return (
-      <div>
-        <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
-          {chats.map((chat, index) => {
+      <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
+        {chats.map((chat, index) => {
 
-            let user1 = chat.participants[0]
-            let user2 = chat.participants[1]
-            let messages = chat.chat_messages;
-            let lastMessage = messages[messages.length - 1].message
-            let partnerAvatar;
-            for (let message of chat.chat_messages) {
-              console.log(message);
+          let user1 = chat.participants[0]
+          let user2 = chat.participants[1]
+          let messages = chat.chat_messages;
+          let lastMessage = messages[messages.length - 1].message
+          let partnerAvatar;
+          for (let message of chat.chat_messages) {
+            console.log(message);
 
-              if (message.username !== myUser && message.username !== 'kenbot') {
-                partnerAvatar = message.img
-                console.log(`logging message.img`);
+            if (message.username !== myUser && message.username !== 'kenbot') {
+              partnerAvatar = message.img
+              console.log(`logging message.img`);
 
-                console.log(message.img);
-                break;
-              }
+              console.log(message.img);
+              break;
             }
-            return (
-              <Box margin={4} marginRight={9}>
-                <Grid item key={index} onClick={() => { this.goToChat(index) }}>
-                  <Card>
-                    <Box marginLeft={2}>
-                      <Grid container spacing={7}>
-                        <Grid item xs={2}>
-                          <Avatar src={partnerAvatar} />
-                          <Typography >
-                            {myUser === user1 ? user2 : user1}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={7}>
-                          <Typography xs={2}>Last Message: {lastMessage}</Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </Card>
-                </Grid>
-              </Box>
-
-            )
-          })}
-
-        </Grid>
+          }
+          return (
+            <Grid item xs={12} key={index} onClick={() => { this.goToChat(index) }}>
+              <Card>
+                <Box marginLeft={2}>
+                  <Grid container>
+                    <Grid item xs={2} className={classes.centered}>
+                      <Box  justifyContent='flex-end'>
+                        <Avatar src={partnerAvatar} />
+                        <Typography >
+                          {myUser === user1 ? user2 : user1}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Typography className={classes.wordWrap}>Last Message: {lastMessage}</Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Card>
+            </Grid>
+          )
+        })}
         <Button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
-      </div>
+
+      </Grid>
 
 
     )

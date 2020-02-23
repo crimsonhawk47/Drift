@@ -12,9 +12,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
-  message: {
-    margin: '20px'
-  },
   scroll: {
     overflow: 'scroll',
     height: '350px',
@@ -22,14 +19,8 @@ const styles = theme => ({
   },
   timer: {
     margin: '20px'
-  },
-  date: {
-    fontSize: '12px',
-    fontStyle: 'italic'
   }
 });
-
-
 
 
 class Chat extends Component {
@@ -56,26 +47,24 @@ class Chat extends Component {
     let active = chat && chat.active
     let chat_date = chat && chat.chat_date
     let timeLeft;
+    let myUser = this.props.reduxStore.user.username
+    let partner;
     if (chat && chat.chat_date) {
       timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
     }
 
 
-
-
-    let myUser = this.props.reduxStore.user.username
-    let partner;
     if (chat) {
       for (let named of chat.participants) {
         if (named !== myUser) {
           partner = named;
         }
       }
-
     }
 
     return (
       <Grid container className={classes.root} spacing={2} justify='center'>
+
         {active ?
           <Typography className={classes.timer}>You have {timeLeft} Hours left!</Typography> :
           <div></div>
