@@ -43,20 +43,30 @@ class ChatList extends Component {
             let lastMessage = messages[messages.length - 1].message
             let partnerAvatar;
             for (let message of chat.chat_messages) {
+              console.log(message);
+
               if (message.username !== myUser && message.username !== 'kenbot') {
                 partnerAvatar = message.img
+                console.log(`logging message.img`);
+
+                console.log(message.img);
+                break;
               }
             }
             return (
-              <Grid item key={index}>
-                <Paper elevation={5} key={index} onClick={() => { this.goToChat(index) }}>
+              <Grid item key={index} onClick={() => { this.goToChat(index) }}>
+                <Grid container spacing={7}>
+                  <Grid item xs={2}>
                   <Avatar src={partnerAvatar}></Avatar>
 
-                  <Typography >
-                    Chatting with {myUser === user1 ? user2 : user1}
-                  </Typography>
-                  <Typography>Last Message: {lastMessage}</Typography>
-                </Paper>
+                    <Typography >
+                      {myUser === user1 ? user2 : user1}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography xs={2}>Last Message: {lastMessage}</Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             )
           })}
