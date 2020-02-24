@@ -18,7 +18,8 @@ const styles = theme => ({
     margin: '20px',
   },
   timer: {
-    margin: '20px'
+    margin: '20px',
+    marginLeft: '120px'
   },
 });
 
@@ -63,13 +64,14 @@ class Chat extends Component {
     }
 
     return (
-      <Grid container className={classes.root} spacing={2} justify='center'>
-        {/* <Grid item xs={12}> */}
-        {active ?
-          <Typography className={classes.timer}>You have {timeLeft} Hours left!</Typography> :
-          <div></div>
-        }
-        {/* </Grid> */}
+      <Grid container className={classes.root} justify='center'>
+        <Grid item xs={12}>
+          {active ?
+            <Typography className={classes.timer}>You have {timeLeft} Hours left!</Typography> :
+            <div></div>
+          }
+        </Grid>
+        <Typography>{partner}</Typography>
 
         <Grid item xs={12} className={classes.scroll} id='scroll-anchor'>
           {chat && chat.chat_messages.map((messageData, index) => {
