@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Paper, Grid, Typography, Button, Avatar, Box, Card } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
+import moment from 'moment'
 
 const styles = theme => ({
   root: {
@@ -11,11 +12,23 @@ const styles = theme => ({
   findChat: {
     marginTop: '30px'
   },
-  wordWrap: {
+  lastMessage: {
+    wordWrap: 'break-word',
+    minHeight: '50px',
+    margin: '8px'
+  },
+  timeLeft: {
+    margin: '8px',
+    fontSize: '14px'
+
+  },
+  username: {
     wordWrap: 'break-word'
   },
   centered: {
-    justifyContent: 'flex-end'
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column'
   }
 });
 
@@ -39,7 +52,7 @@ class ChatList extends Component {
     let chats = this.props.reduxStore.chats
     let myUser = this.props.reduxStore.user.username
     return (
-      
+
       <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
         <Button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
 
@@ -47,8 +60,11 @@ class ChatList extends Component {
 
           let user1 = chat.participants[0]
           let user2 = chat.participants[1]
+          let active = chat.active
           let messages = chat.chat_messages;
+          let chat_date = chat.chat_date
           let lastMessage = messages[messages.length - 1].message
+          let timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
           let partnerAvatar;
           for (let message of chat.chat_messages) {
             console.log(message);
@@ -63,23 +79,32 @@ class ChatList extends Component {
           }
           return (
             <Grid item xs={12} key={index} onClick={() => { this.goToChat(index) }}>
-              <Card>
-                <Box marginLeft={2}>
-                  <Grid container>
-                    <Grid item xs={2} className={classes.centered}>
-                      <Box  justifyContent='flex-end'>
+              <Box marginLeft={2}>
+                <Grid container>
+                  <Grid container item xs={3}>
+                    <Grid container justify='center' alignItems='center'>
+                      <Grid item xs={12}>
                         <Avatar src={partnerAvatar} />
-                        <Typography >
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography className={classes.username}>
                           {myUser === user1 ? user2 : user1}
                         </Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography className={classes.wordWrap}>Last Message: {lastMessage}</Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Box>
-              </Card>
+                  <Grid item xs={6}>
+                    <Card>
+                      <Typography className={classes.lastMessage}>Last Message: {lastMessage}</Typography>
+                    </Card>
+                  </Grid>
+
+                  <Grid item container alignItems='center' xs={3}>
+                    <Typography className={classes.timeLeft}>{active ? timeLeft + ' Hours Left' : 'Goodbye, friend!'}</Typography>
+                  </Grid>
+
+                </Grid>
+              </Box>
             </Grid>
           )
         })}
