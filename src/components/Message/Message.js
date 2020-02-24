@@ -98,7 +98,7 @@ class Message extends Component {
               </Grid>
               <Grid item xs={9}>
                 {/* <Box marginLeft='16px'> */}
-                <Typography className={classes.wordWrap}>{userSpeaking}: {message}</Typography>
+                <Typography className={classes.wordWrap}>{message}</Typography>
                 <Typography className={classes.date}>{date}</Typography>
 
                 {/* </Box> */}

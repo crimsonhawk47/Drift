@@ -53,8 +53,10 @@ class ChatList extends Component {
     let myUser = this.props.reduxStore.user.username
     return (
 
-      <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
-        <Button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
+      <Grid container className={classes.root} spacing={5} justify='center'>
+        <Grid item xs={4}>
+          <Button variant="contained" className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
+        </Grid>
 
         {chats.map((chat, index) => {
 
