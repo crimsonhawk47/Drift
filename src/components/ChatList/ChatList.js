@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Paper, Grid, Typography, Button, Avatar } from '@material-ui/core'
+import { Paper, Grid, Typography, Button, Avatar, Box, Card } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
+import moment from 'moment'
 
 const styles = theme => ({
   root: {
@@ -10,6 +11,24 @@ const styles = theme => ({
   },
   findChat: {
     marginTop: '30px'
+  },
+  lastMessage: {
+    wordWrap: 'break-word',
+    minHeight: '50px',
+    margin: '8px'
+  },
+  timeLeft: {
+    margin: '8px',
+    fontSize: '14px'
+
+  },
+  username: {
+    wordWrap: 'break-word'
+  },
+  centered: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column'
   }
 });
 
@@ -33,37 +52,66 @@ class ChatList extends Component {
     let chats = this.props.reduxStore.chats
     let myUser = this.props.reduxStore.user.username
     return (
-      <div>
-        <Grid container className={classes.root} spacing={5} justify='center' direction='column' alignItems='stretch'>
-          {chats.map((chat, index) => {
 
-            let user1 = chat.participants[0]
-            let user2 = chat.participants[1]
-            let messages = chat.chat_messages;
-            let lastMessage = messages[messages.length - 1].message
-            let partnerAvatar;
-            for (let message of chat.chat_messages) {
-              if (message.username !== myUser && message.username !== 'kenbot') {
-                partnerAvatar = message.img
-              }
-            }
-            return (
-              <Grid item key={index}>
-                <Paper elevation={5} key={index} onClick={() => { this.goToChat(index) }}>
-                  <Avatar src={partnerAvatar}></Avatar>
-
-                  <Typography >
-                    Chatting with {myUser === user1 ? user2 : user1}
-                  </Typography>
-                  <Typography>Last Message: {lastMessage}</Typography>
-                </Paper>
-              </Grid>
-            )
-          })}
-
+      <Grid container className={classes.root} spacing={5} justify='center'>
+        <Grid item xs={4}>
+          <Button variant="contained" className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
         </Grid>
-        <Button className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
-      </div>
+
+        {chats.map((chat, index) => {
+
+          let user1 = chat.participants[0]
+          let user2 = chat.participants[1]
+          let active = chat.active
+          let messages = chat.chat_messages;
+          let chat_date = chat.chat_date
+          let lastMessage = messages[messages.length - 1].message
+          let timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
+          let partnerAvatar;
+          for (let message of chat.chat_messages) {
+            console.log(message);
+
+            if (message.username !== myUser && message.username !== 'kenbot') {
+              partnerAvatar = message.img
+              console.log(`logging message.img`);
+
+              console.log(message.img);
+              break;
+            }
+          }
+          return (
+            <Grid item xs={12} key={index} onClick={() => { this.goToChat(index) }}>
+              <Box marginLeft={2}>
+                <Grid container>
+                  <Grid container item xs={3}>
+                    <Grid container justify='center' alignItems='center'>
+                      <Grid item xs={12}>
+                        <Avatar src={partnerAvatar} />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography className={classes.username}>
+                          {myUser === user1 ? user2 : user1}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card>
+                      <Typography className={classes.lastMessage}>Last Message: {lastMessage}</Typography>
+                    </Card>
+                  </Grid>
+
+                  <Grid item container alignItems='center' xs={3}>
+                    <Typography className={classes.timeLeft}>{active ? timeLeft + ' Hours Left' : 'Goodbye, friend!'}</Typography>
+                  </Grid>
+
+                </Grid>
+              </Box>
+            </Grid>
+          )
+        })}
+
+      </Grid>
 
 
     )
