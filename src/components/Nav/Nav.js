@@ -7,7 +7,7 @@ import './Nav.css';
 const makeFirstChatInactive = (props) => {
   props.dispatch({
     type: 'DEMO_INACTIVE',
-    payload: 1
+    payload: 3
   })
   
 }
