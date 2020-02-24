@@ -126,6 +126,7 @@ function getChats(socket) {
                       as goo
                       JOIN "user" ON "user".id = "user1" OR "user".id = "user2"
                       GROUP BY "chat_id", "chat_messages", "goo".active, "goo".chat_date
+                      ORDER BY "goo".active DESC, "goo".chat_date
                       `
 
   pool.query(fillUsernames, [Number(userId)])
