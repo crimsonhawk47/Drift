@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Typography, Box } from '@material-ui/core'
+
 
 class LoginPage extends Component {
   state = {
@@ -40,44 +42,53 @@ class LoginPage extends Component {
             {this.props.errors.loginMessage}
           </h2>
         )}
-        <form onSubmit={this.login}>
-          <h1>Login</h1>
-          <div>
-            <label htmlFor="username">
-              Username:
+        <Box textAlign='center'>
+          <form onSubmit={this.login} style={{ padding: '45px' }}>
+            <Box fontWeight={300} fontFamily="Roboto" fontSize={24} margin='20px'>
+              <Typography variant='p'>Login</Typography>
+            </Box>
+            <Box fontWeight={300} fontFamily="Roboto" fontSize={19}>
+
+              <div>
+                <label htmlFor="username">
+                  Username:
               <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleInputChangeFor('username')}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="password">
-              Password:
+                    type="text"
+                    name="username"
+                    value={this.state.username}
+                    onChange={this.handleInputChangeFor('username')}
+                  />
+                </label>
+              </div>
+              <div>
+                <label htmlFor="password">
+                  Password:
               <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleInputChangeFor('password')}
-              />
-            </label>
-          </div>
-          <div>
-            <input
-              className="log-in"
-              type="submit"
-              name="submit"
-              value="Log In"
-            />
-          </div>
-        </form>
+                    type="password"
+                    name="password"
+                    value={this.state.password}
+                    onChange={this.handleInputChangeFor('password')}
+                  />
+                </label>
+              </div>
+              <div>
+                <input
+                  className="log-in"
+                  type="submit"
+                  name="submit"
+                  value="Log In"
+                />
+              </div>
+            </Box>
+
+
+          </form>
+        </Box>
         <center>
           <button
             type="button"
             className="link-button"
-            onClick={() => {this.props.dispatch({type: 'SET_TO_REGISTER_MODE'})}}
+            onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}
           >
             Register
           </button>

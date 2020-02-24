@@ -29,7 +29,7 @@ const UserPage = (props) => (
     </Grid>
     <ChatList />
     {/* <p>Your ID is: {props.user.id}</p> */}
-    <LogOutButton className="log-in" />
+    {/* <LogOutButton className="log-in" /> */}
   </div >
 );
 
