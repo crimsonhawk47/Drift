@@ -15,7 +15,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   message: {
-    margin: '20px'
+    margin: '10px',
   },
   date: {
     fontSize: '12px',
@@ -76,38 +76,36 @@ class Message extends Component {
     let img = messageData.img
 
     return (
-      <Grid item xs={7} className={classes.message}>
+      <Grid item container xs={7} className={classes.message}>
         <DeleteAlert
           open={this.state.open}
           handleClickOpen={this.handleClickOpen}
           handleClickClose={this.handleClickClose}
           deleteMessage={() => { this.deleteMessage(messageData.id, chat_id) }} />
 
-        <Grid container spacing={0} justify='flex-start' alignItems='center'>
-          <Grid item xs={12}>
-            <Paper>
-              <Grid container>
-                <Grid className={classes.justifyTest} item xs={3} >
-                  <Grid justify='center' container>
-                    <Avatar src={img}></Avatar>
-                  </Grid>
-                  <Grid justify='center' container>
-                    {userSpeaking === myUser && active ?
-                      <DeleteIcon color="action" fontSize="small" onClick={() => this.handleClickOpen()} /> : <p></p>}
-                  </Grid>
-
+        <Grid item xs={12}>
+          <Paper>
+            <Grid container>
+              <Grid className={classes.justifyTest} item xs={3} >
+                <Grid justify='center' container>
+                  <Avatar src={img}></Avatar>
                 </Grid>
-                <Grid item xs={9}>
-                  {/* <Box marginLeft='16px'> */}
-                  <Typography className={classes.wordWrap}>{userSpeaking}: {message}</Typography>
-                  <Typography className={classes.date}>{date}</Typography>
-
-                  {/* </Box> */}
-
+                <Grid justify='center' container>
+                  {userSpeaking === myUser && active ?
+                    <DeleteIcon color="action" fontSize="small" onClick={() => this.handleClickOpen()} /> : <p></p>}
                 </Grid>
+
               </Grid>
-            </Paper>
-          </Grid>
+              <Grid item xs={9}>
+                {/* <Box marginLeft='16px'> */}
+                <Typography className={classes.wordWrap}>{userSpeaking}: {message}</Typography>
+                <Typography className={classes.date}>{date}</Typography>
+
+                {/* </Box> */}
+
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
       </Grid>
     )
