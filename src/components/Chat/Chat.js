@@ -15,11 +15,11 @@ const styles = theme => ({
   scroll: {
     overflow: 'scroll',
     height: '350px',
-    margin: '20px'
+    margin: '20px',
   },
   timer: {
     margin: '20px'
-  }
+  },
 });
 
 
@@ -64,17 +64,29 @@ class Chat extends Component {
 
     return (
       <Grid container className={classes.root} spacing={2} justify='center'>
-
+        {/* <Grid item xs={12}> */}
         {active ?
           <Typography className={classes.timer}>You have {timeLeft} Hours left!</Typography> :
           <div></div>
         }
+        {/* </Grid> */}
 
-        <div className={classes.scroll} id='scroll-anchor'>
+        <Grid item xs={12} className={classes.scroll} id='scroll-anchor'>
           {chat && chat.chat_messages.map((messageData, index) => {
-            return <Message key={index} messageData={messageData} />
+            if (messageData.username === myUser) {
+              return (<Grid spacing={0} container justify='flex-start'>
+                <Message key={index} messageData={messageData} />
+              </Grid>)
+            }
+            else {
+              return (
+                <Grid container spacing={0} justify='flex-end'>
+                  <Message key={index} messageData={messageData} />
+                </Grid>
+              )
+            }
           })}
-        </div>
+        </Grid>
 
         <div></div>
         <Grid item xs={11} container justify="center">
