@@ -43,7 +43,7 @@ class LoginPage extends Component {
           </h2>
         )}
         <Box textAlign='center'>
-          <form onSubmit={this.login} style={{ padding: '45px' }}>
+          <form onSubmit={this.login} style={{ padding: '85px', width: 'auto', paddingBottom: '12px' }}>
             <Box fontWeight={300} fontFamily="Roboto" fontSize={24} margin='20px'>
               <Typography variant='p'>Login</Typography>
             </Box>
@@ -57,8 +57,10 @@ class LoginPage extends Component {
                     name="username"
                     value={this.state.username}
                     onChange={this.handleInputChangeFor('username')}
+
                   />
                 </label>
+
               </div>
               <div>
                 <label htmlFor="password">
