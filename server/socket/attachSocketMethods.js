@@ -62,6 +62,17 @@ const attachSocketMethods = (socket, io, serverMethods) => {
     console.log(`---------DONE---------`);
   })
 
+  socket.on('DEMO_INACTIVE', async function(data, f){
+    console.log(`DEMO INACTIVE`);
+    console.log(data);
+    
+    await pool.query(`UPDATE "chat"
+                      SET "active" = NOT "active"
+                      WHERE "id" = $1`, [data])
+    f()
+    
+  })
+
 
   findChat(socket, io, serverMethods)
   changeAvatar(socket, io, serverMethods);

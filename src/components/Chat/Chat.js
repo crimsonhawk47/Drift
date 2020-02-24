@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Typography, Input, Button } from '@material-ui/core'
+import { Grid, Typography, Input, Button, Box } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import SendIcon from '@material-ui/icons/Send';
 import { connect } from 'react-redux'
@@ -14,7 +14,7 @@ const styles = theme => ({
   },
   scroll: {
     overflow: 'scroll',
-    height: '350px',
+    height: '400px',
     margin: '20px',
   },
   timer: {
@@ -71,8 +71,9 @@ class Chat extends Component {
             <div></div>
           }
         </Grid>
-        <Typography>{partner}</Typography>
-
+        <Box fontStyle='italic'>
+          <Typography >{partner}</Typography>
+        </Box>
         <Grid item xs={12} className={classes.scroll} id='scroll-anchor'>
           {chat && chat.chat_messages.map((messageData, index) => {
             if (messageData.username === myUser) {
@@ -89,6 +90,7 @@ class Chat extends Component {
             }
           })}
         </Grid>
+
 
         <div></div>
         <Grid item xs={11} container justify="center">

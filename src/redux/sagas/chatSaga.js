@@ -20,11 +20,20 @@ function* findChat() {
   })
 }
 
+function* demoInactive(action){
+  yield socket.emit('DEMO_INACTIVE', action.payload, function (chatId){
+    console.log(`It returned`);
+    store.dispatch({type: 'GET_MESSAGES'})
+    
+  })
+}
+
 function* chatSaga() {
   yield takeLatest('SEND_MESSAGE', sendMessage);
   yield takeLatest('GET_MESSAGES', getMessages);
   yield takeLatest('DELETE_MESSAGE', deleteMessage)
   yield takeLatest('FIND_CHAT', findChat)
+  yield takeLatest('DEMO_INACTIVE', demoInactive)
 }
 
 export default chatSaga;
