@@ -1,3 +1,5 @@
+--The database is just called drift
+
 --Empty Tables
 DELETE FROM "reports"
 
