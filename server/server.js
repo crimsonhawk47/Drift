@@ -86,7 +86,6 @@ io.on("connection", function (socket) {
         }
 
         //As a test, each time any socket connects, we are telling Room1 someone connected
-        socket.to(1).emit('TEST', 'HI ROOM 1! SOMEONE NEW JUST JOINED THE THING')
         console.log(`----------------------------`);
 
       })

@@ -25,10 +25,6 @@ const setupSocket = () => {
       store.dispatch({ type: 'SET_ALL_CHATS', payload: data })
     })
 
-    innerSocket.on('TEST', (data) => {
-      console.log(`I'M IN A ROOM, LIKE ${data}`);
-    })
-
     //Should only trigger if client is modified
     innerSocket.on('NOT_IN_ROOM', (data) => {
       console.log(`You are not in this chat room`);
@@ -37,7 +33,6 @@ const setupSocket = () => {
     //Happens when someone in your room sends 'SEND_MESSAGE' to the server
     innerSocket.on('NEW_MESSAGE', () => {
       console.log(`SOMEONE IN YOUR ROOM SENT A MESSAGE`);
-
     })
 
     //Happens when you update your avatar

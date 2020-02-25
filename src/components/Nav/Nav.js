@@ -4,17 +4,9 @@ import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import './Nav.css';
 
-const makeFirstChatInactive = (props) => {
-  props.dispatch({
-    type: 'DEMO_INACTIVE',
-    payload: 3
-  })
-  
-}
-
 const Nav = (props) => (
   <div className="nav">
-      <h2 className="nav-title" onClick={()=>{makeFirstChatInactive(props)}}>Drift</h2>
+      <h2 className="nav-title" >Drift</h2>
     <div className="nav-right">
       <Link className="nav-link" to="/home">
         {/* Show this link if they are logged in or not,
