@@ -2,6 +2,14 @@ import store from './store'
 
 import io from 'socket.io-client'
 
+import url from 'url';
+// const params = url.parse(process.env.DATABASE_URL);
+
+// const host = params.hostname
+// const port = params.port
+
+
+
 let socket;
 
 
