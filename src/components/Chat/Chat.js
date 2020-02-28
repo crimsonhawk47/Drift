@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import Message from '../Message/Message'
 import SendMessage from '../SendMessage/SendMessage'
+import withRouter from 'react-router-dom'
 
 const styles = theme => ({
 
@@ -109,4 +110,4 @@ const mapStateToProps = reduxStore => {
     { reduxStore }
   )
 }
-export default withStyles(styles)(connect(mapStateToProps)(Chat))
+export default withRouter(withStyles(styles)(connect(mapStateToProps)(Chat)))
