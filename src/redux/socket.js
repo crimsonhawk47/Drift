@@ -26,7 +26,7 @@ const setupSocket = () => {
 
     //Making a socket connection, which will eventually be passed to the socket
     //variable on the outside
-    let innerSocket = io('localhost:5000');
+    let innerSocket = io();
 
     //Takes the data it receives and puts it in the chats reducer
     innerSocket.on('RECEIVE_ALL_CHATS', (data) => {
