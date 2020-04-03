@@ -27,6 +27,11 @@ This project uses React, Redux, Express, Passport, PostgreSQL, and Socket-IO (a 
 
 After registering an account, click the find chat button. The app will for 60 seconds for another user. If another user is looking in that time, you will be matched. You can use the chats button in the header to see a list of your chats. This will give you how much time you have left, as well as the last message sent. If you click on the message, you will be taken to the chat. 
 
+![image](image1.png)
+
+![image](image2.png)
+
+
 ## Acknowledgements
 
 Thank you to Prime Digital Academy for the amazing education. Thank you to Dane Smith for guiding the class through these projects. Thank you to my cohort for a once-in-a-lifetime experience. 
