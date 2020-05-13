@@ -42,9 +42,9 @@ class ChatList extends Component {
 
   findChat = () => {
     this.props.dispatch({
-      type: 'FIND_CHAT'
+      type: 'FIND_CHAT',
+      payload: this.props.history,
     })
-    this.props.history.push('/loading')
   }
 
   render() {
