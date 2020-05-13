@@ -3,6 +3,7 @@ const sendMessage = require('./sendMessage')
 const deleteMessage = require('./deleteMessage')
 const changeAvatar = require('./changeAvatar')
 const findChat = require('./findChat')
+const getMessages = require('./getMessages')
 const moment = require('moment')
 let x = 0
 const attachSocketMethods = (socket, io, serverMethods) => {
@@ -12,6 +13,7 @@ const attachSocketMethods = (socket, io, serverMethods) => {
   changeAvatar(socket, io, serverMethods);
   deleteMessage(socket, io, serverMethods);
   sendMessage(socket, io, serverMethods);
+  getMessages(socket, io, serverMethods);
 }
 
 module.exports = attachSocketMethods
