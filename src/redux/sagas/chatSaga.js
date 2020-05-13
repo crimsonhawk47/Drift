@@ -14,9 +14,11 @@ function* deleteMessage(action) {
   yield socket.emit('DELETE_MESSAGE', action.payload)
 }
 
-function* findChat() {
+function* findChat(action) {
+  action.payload.push('/loading');
   yield socket.emit('FIND_CHAT', function (chatId) {
-    store.dispatch({ type: 'GET_MESSAGES' })
+    store.dispatch({ type: 'GET_MESSAGES' });
+    action.payload.push('/home');
   })
 }
 
