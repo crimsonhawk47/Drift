@@ -25,8 +25,10 @@ const sendMessage = (socket, io, serverMethods) => {
     console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
 
 
-    console.log(userId);
+    console.log(`User Id of person Sending Message ${userId}`);
+    console.log(`Rooms this socket is in ----------`);
     console.log(socket.rooms);
+    console.log(`-----------------`);
 
 
 
