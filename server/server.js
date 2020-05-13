@@ -130,8 +130,6 @@ function getChats(socket) {
 
   pool.query(fillUsernames, [Number(userId)])
     .then(response => {
-      console.log(`sending back chats`);
-      console.log(response.rows);
 
 
 
@@ -148,14 +146,10 @@ cron.schedule('* * * * * ', () => {
   pool.query(`SELECT * FROM "chat"
             WHERE "active" = true`)
     .then(async result => {
-      console.log(result.rows);
       for (chat of result.rows) {
         let chatDate = Number(moment(chat.start_date).format('X')) / 60 / 60 / 24
         let currentDate = moment().format('X') / 60 / 60 / 24
-        console.log(chatDate);
-        console.log(currentDate);
         if (currentDate - chatDate > 1) {
-          console.log(`Making the chat inactive`);
           try {
             await pool.query(`UPDATE "chat"
                   SET "active" = false
