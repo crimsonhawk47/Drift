@@ -5,7 +5,7 @@ const moment = require('moment')
 function getChats(socket) {
     let userId = socket.request.session.passport.user;
 
-    console.log(`Moment before getChats Query says ${moment().format('MMMM Do YYYY, h:mm:ss.SSS a')}`);
+    // console.log(`Moment before getChats Query says ${moment().format('MMMM Do YYYY, h:mm:ss.SSS a')}`);
 
     //Selects messages and their users by chat and groups them into an array in one column
     let combineMessagesText = `SELECT "chat".id as "chat_id", jsonb_build_object('id', "messages".id, 'message', "messages".message, 'username', "user".username, 'date', "messages".date, 'img', "user".image) as message_details, "messages".id as "message_id" FROM "chat"
@@ -32,7 +32,7 @@ function getChats(socket) {
 
     pool.query(fillUsernames, [Number(userId)])
         .then(response => {
-            console.log(`Moment after getChats query says ${moment().format('MMMM Do YYYY, h:mm:ss.SSS a')}`);
+            // console.log(`Moment after getChats query says ${moment().format('MMMM Do YYYY, h:mm:ss.SSS a')}`);
 
 
 

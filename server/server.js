@@ -54,7 +54,7 @@ const io = socket(server).use(function (socket, next) {
 
 
 io.on("connection", function (socket) {
-  console.log(`New connection with id: ${socket.id}`);
+  console.log(`New socket connection with id: ${socket.id}`);
   let userId = socket.request.session
     && socket.request.session.passport
     && socket.request.session.passport.user;
@@ -76,17 +76,14 @@ io.on("connection", function (socket) {
     //
     pool.query(queryText, [userId])
       .then(result => {
-        console.log(`----------------------------`);
 
         for (row of result.rows) {
           //For each of the chats the user is in, join them to a
           //room with the name of that chat ID
           socket.join(row.id)
-          console.log(`socket is joining ${row.id}`);
         }
 
         //As a test, each time any socket connects, we are telling Room1 someone connected
-        console.log(`----------------------------`);
 
       })
       .catch(err => {
