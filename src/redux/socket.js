@@ -33,6 +33,10 @@ const setupSocket = () => {
       store.dispatch({ type: 'SET_ALL_CHATS', payload: data })
     })
 
+    innerSocket.on('ERROR', (data) => {
+      console.error(data)
+    })
+
     //Should only trigger if client is modified
     innerSocket.on('NOT_IN_ROOM', (data) => {
       console.log(`You are not in this chat room`);

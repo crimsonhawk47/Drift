@@ -6,52 +6,38 @@ const sendMessage = (socket, io, serverMethods) => {
   socket.on('SEND_MESSAGE', async data => {
     try {
       let chatId = data.chatId
+      //Checks if the chat is actually still open
       await serverMethods.isChatActive(chatId)
+
       let userId = socket.request.session.passport.user
       let message = data.input
       let socketIdSendingMessage = socket.id
 
-      console.log(`-----------------`);
-      console.log('THE TIME IS');
+      console.log(`START-----------------------------------------`);
       console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
-
-
-      console.log(`User Id of person Sending Message ${userId}`);
-      console.log(`Rooms this socket is in ----------`);
+      console.log(`User Id of person Sending Message: #${userId}`);
+      console.log(`--------Rooms this socket is in ----------`);
       console.log(socket.rooms);
-      console.log(`-----------------`);
-
+      console.log(`------------------------------------------`);
+      console.log(`END`);
 
 
       //The user will be sending the chatId from the client. We don't want to run any
-      //of this unless the chatId being sent is actually a room that socket is in. 
+      //of this unless the chatId being sent is actually a room that socket is in, otherwise
+      //People could modify their client and post to any room. 
       if (socket.rooms.hasOwnProperty(chatId)) {
 
-        let queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id", "date")
+        const queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id", "date")
                         VALUES($1, $2, $3, NOW());`
-        pool.query(queryText, [message, chatId, userId])
-          .then(response => {
-            //Tell the room that a message was sent
-            io.to(chatId).emit('NEW_MESSAGE')
-            let listOfAllSocketObjects = io.sockets
-            let currentRoomSocketNames = io.adapter.rooms[chatId].sockets
-
-            //For every socket connected to that room (should only be two)
-            //Roomsocket is a socket id...
-            for (roomSocket in currentRoomSocketNames) {
-              //...Index the list of sockets with the roomSocket ID...
-              let socketToUpdate = listOfAllSocketObjects[roomSocket]
-              //...And update that sockets methods
-              serverMethods.getChats(socketToUpdate)
-            }
-
-
-          }).catch(err => {
-            console.log(err);
-
-          })
-
-
+        await pool.query(queryText, [message, chatId, userId])
+        //Tell the room that a message was sent
+        io.to(chatId).emit('NEW_MESSAGE')
+        //Getting an array of sockets in the room. 
+        const arrayOfSockets = serverMethods.getArrayOfSocketsInRoom(io, chatId)
+        //Telling all sockets in the room to update chats. 
+        for (socket of arrayOfSockets) {
+          serverMethods.getChats(socket)
+        }
       }
       else {
         //THIS SHOULD ONLY TRIGGER IF THE USER MODIFIED THEIR CLIENT
@@ -59,6 +45,7 @@ const sendMessage = (socket, io, serverMethods) => {
       }
     } catch (err) {
       console.log(err);
+      socket.emit(err)
     }
 
   })

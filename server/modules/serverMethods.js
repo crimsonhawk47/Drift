@@ -34,9 +34,6 @@ function getChats(socket) {
         .then(response => {
             // console.log(`Moment after getChats query says ${moment().format('MMMM Do YYYY, h:mm:ss.SSS a')}`);
 
-
-
-
             //RECEIVE_ALL_CHATS is a socket event on the client that will put data into the chats reducer
             socket.emit('RECEIVE_ALL_CHATS', response.rows)
         }).catch(error => {
@@ -60,5 +57,20 @@ async function isChatActive(chatId) {
     }
 }
 
+function getArrayOfSocketsInRoom(io, roomName) {
 
-module.exports = { getChats, isChatActive }
+    //Get an object of all sockets, which can be indexed by name/key
+    const listOfAllSocketObjects = io.sockets
+    //Get an object  of the names/keys of sockets in a specific room. We are indexing by the room name. 
+    const namesOfSocketsInRoom = io.adapter.rooms[roomName].sockets
+    const arrayOfSockets = []
+    for (socketName in namesOfSocketsInRoom) {
+        //Get the actual socket object by name
+        const socketToAdd = listOfAllSocketObjects[socketName]
+        arrayOfSockets.push(socketToAdd)
+    }
+    return arrayOfSockets
+}
+
+
+module.exports = { getChats, isChatActive, getArrayOfSocketsInRoom }
