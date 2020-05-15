@@ -10,7 +10,7 @@ const pool = require('./modules/pool');
 const attachSocketMethods = require('./socket/attachSocketMethods')
 const cron = require('node-cron')
 const moment = require('moment')
-const serverMethods = require('./modules/serverMethods')
+const serverMethods = require('./modules/serverMethods/`serverMethods')
 
 
 const passport = require('./strategies/user.strategy');

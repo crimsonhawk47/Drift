@@ -1,5 +1,4 @@
-const pool = require('./pool')
-const moment = require('moment')
+const pool = require('../pool')
 
 
 function getChats(socket) {
@@ -41,36 +40,4 @@ function getChats(socket) {
         })
 }
 
-async function isChatActive(chatId) {
-    try {
-        let isChatActive = await pool.query(`SELECT * FROM "chat"
-                            WHERE "chat".id = $1`, [chatId])
-        if (!isChatActive.rows[0].active) {
-            return Promise.reject('Chat was no longer active')
-        }
-        else {
-            return Promise.resolve(`ChatID ${chatId} is active`)
-        }
-    } catch (err) {
-        console.log(err);
-        return Promise.reject(err)
-    }
-}
-
-function getArrayOfSocketsInRoom(io, roomName) {
-
-    //Get an object of all sockets, which can be indexed by name/key
-    const listOfAllSocketObjects = io.sockets
-    //Get an object  of the names/keys of sockets in a specific room. We are indexing by the room name. 
-    const namesOfSocketsInRoom = io.adapter.rooms[roomName].sockets
-    const arrayOfSockets = []
-    for (socketName in namesOfSocketsInRoom) {
-        //Get the actual socket object by name
-        const socketToAdd = listOfAllSocketObjects[socketName]
-        arrayOfSockets.push(socketToAdd)
-    }
-    return arrayOfSockets
-}
-
-
-module.exports = { getChats, isChatActive, getArrayOfSocketsInRoom }
+module.exports = getChats
