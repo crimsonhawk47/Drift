@@ -6,23 +6,14 @@ const sendMessage = (socket, io, serverMethods) => {
   socket.on('SEND_MESSAGE', async data => {
     try {
       let chatId = data.chatId
-      //Checks if the chat is actually still open
-      await serverMethods.isChatActive(chatId)
-
       let userId = socket.request.session.passport.user
       let message = data.input
-      let socketIdSendingMessage = socket.id
+      //Checks if the chat is actually still open
+      //Will return a rejected promsie if it's not
+      await serverMethods.isChatActive(chatId)
 
-      console.log(`START-----------------------------------------`);
-      console.log(socket.id);
 
-      // console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
-      // console.log(`User Id of person Sending Message: #${userId}`);
-      // console.log(`--------Rooms this socket is in ----------`);
-      // console.log(socket.rooms);
-      // console.log(`------------------------------------------`);
-      console.log(`END`);
-
+      // messageLogger(socket)
 
       //The user will be sending the chatId from the client. We don't want to run any
       //of this unless the chatId being sent is actually a room that socket is in, otherwise
@@ -34,12 +25,14 @@ const sendMessage = (socket, io, serverMethods) => {
         await pool.query(queryText, [message, chatId, userId])
         //Tell the room that a message was sent
         io.to(chatId).emit('NEW_MESSAGE')
+
         //Getting an array of sockets in the room. 
         const arrayOfSockets = serverMethods.getArrayOfSocketsInRoom(io, chatId)
         //Telling all sockets in the room to update chats. 
-        for (socket of arrayOfSockets) {
-          serverMethods.getChats(socket)
+        for (const socketFromRoom of arrayOfSockets) {
+          serverMethods.getChats(socketFromRoom)
         }
+
       }
       else {
         //THIS SHOULD ONLY TRIGGER IF THE USER MODIFIED THEIR CLIENT
@@ -49,8 +42,19 @@ const sendMessage = (socket, io, serverMethods) => {
       console.log(err);
       socket.emit(err)
     }
-
   })
+}
+
+function messageLogger(socket) {
+  let userId = socket.request.session.passport.user
+  console.log(`START-----------------------------------------`);
+  console.log(`socket id: `, socket.id);
+  console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+  console.log(`User Id of person Sending Message: #${userId}`);
+  console.log(`--------Rooms this socket is in ----------`);
+  console.log(socket.rooms);
+  console.log(`------------------------------------------`);
+  console.log(`END`);
 }
 
 module.exports = sendMessage  
