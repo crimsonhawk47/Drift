@@ -14,11 +14,13 @@ const sendMessage = (socket, io, serverMethods) => {
       let socketIdSendingMessage = socket.id
 
       console.log(`START-----------------------------------------`);
-      console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
-      console.log(`User Id of person Sending Message: #${userId}`);
-      console.log(`--------Rooms this socket is in ----------`);
-      console.log(socket.rooms);
-      console.log(`------------------------------------------`);
+      console.log(socket.id);
+
+      // console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+      // console.log(`User Id of person Sending Message: #${userId}`);
+      // console.log(`--------Rooms this socket is in ----------`);
+      // console.log(socket.rooms);
+      // console.log(`------------------------------------------`);
       console.log(`END`);
 
 

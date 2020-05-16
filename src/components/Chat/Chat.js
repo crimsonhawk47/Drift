@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import Message from '../Message/Message'
 import SendMessage from '../SendMessage/SendMessage'
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 const styles = theme => ({
 
