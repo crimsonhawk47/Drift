@@ -6,30 +6,25 @@ const deleteMessage = (socket, io, serverMethods) => {
     try {
       const chatId = data.chatId
       const userId = socket.request.session.passport.user
-      let room;
+      //Check if chat is still active
       await serverMethods.isChatActive(chatId)
-
-      //Grab the chat_id, which is synonymous with the room number
-      const result = await pool.query(`SELECT "chat_id" FROM "messages"
-    WHERE "messages".id = $1 AND "messages".user_id = $2`, [data.id, userId])
-      //There should only be one result, with a column of chat_id. This is the room
-      room = String(result.rows[0].chat_id)
-      console.log('Setting Room to ', room);
-
-      //If we actually got the room the message is from
-      if (room) {
+      //If the socket is really in that room
+      if (socket.rooms.hasOwnProperty(chatId)) {
+        //Delete the message, assuming the user actually owns the message
         let queryText = `DELETE FROM "messages"
         WHERE "messages".id = $1 AND "messages".user_id = $2`
         const deleteResult = await pool.query(queryText, [data.id, userId])
         //After deleting the message, we tell everyone in the room to update
-        io.to(room).emit('GET_MESSAGES')
-
+        io.to(chatId).emit('GET_MESSAGES')
       }
+      else throw (`The client's socket is not in the chat room provided by the client`)
+
     }
     catch (err) {
       console.log(err);
-      return err
+      socket.emit('ERROR', 'SERVER ERROR: Something went wrong with deleting your message')
     }
   })
 }
+
 module.exports = deleteMessage
