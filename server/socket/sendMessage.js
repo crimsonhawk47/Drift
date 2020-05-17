@@ -12,24 +12,18 @@ const sendMessage = (socket, io, serverMethods) => {
       //Will return a rejected promsie if it's not
       await serverMethods.isChatActive(chatId)
 
-
       // messageLogger(socket)
 
       //The user will be sending the chatId from the client. We don't want to run any
       //of this unless the chatId being sent is actually a room that socket is in, otherwise
       //People could modify their client and post to any room. 
-      if (socket.rooms.hasOwnProperty(chatId)) {
+      if (!socket.rooms.hasOwnProperty(chatId)) {
         const queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id", "date")
                         VALUES($1, $2, $3, NOW());`
         await pool.query(queryText, [message, chatId, userId])
         //Tell the room that a message was sent
         io.to(chatId).emit('NEW_MESSAGE')
-        //Getting an array of sockets in the room. 
-        const arrayOfSockets = serverMethods.getArrayOfSocketsInRoom(io, chatId)
-        //Telling all sockets in the room to update chats. 
-        for (const socketFromRoom of arrayOfSockets) {
-          serverMethods.getChats(socketFromRoom)
-        }
+        io.to(chatId).emit('GET_MESSAGES')
 
       }
       else {
