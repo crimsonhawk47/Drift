@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux'
+import React from 'react';
 import { Grid, Typography } from '@material-ui/core'
 import moment from 'moment'
-
-
 
 const ListClock = (props) => {
     const active = props.active
@@ -16,9 +13,4 @@ const ListClock = (props) => {
     )
 }
 
-const mapStateToProps = reduxStore => {
-    return (
-        { reduxStore }
-    )
-}
-export default connect(mapStateToProps)(ListClock)
+export default ListClock

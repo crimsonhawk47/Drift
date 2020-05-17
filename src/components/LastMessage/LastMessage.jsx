@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux'
+import React from 'react';
 import { Grid, Typography, Card } from '@material-ui/core'
 
 
@@ -10,14 +9,7 @@ const LastMessage = (props) => {
                 <Typography className={props.textStyling}>Last Message: {props.lastMessage}</Typography>
             </Card>
         </Grid>
-
-    )
-
-}
-
-const mapStateToProps = reduxStore => {
-    return (
-        { reduxStore }
     )
 }
-export default connect(mapStateToProps)(LastMessage)
+
+export default LastMessage

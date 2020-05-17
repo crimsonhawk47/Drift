@@ -45,23 +45,14 @@ class ChatList extends Component {
     this.props.history.push(`/chat/${index}`)
   }
 
-  // findChat = () => {
-  //   this.props.dispatch({
-  //     type: 'FIND_CHAT',
-  //     payload: this.props.history,
-  //   })
-  // }
-
   render() {
     const { classes } = this.props;
-    let chats = this.props.reduxStore.chats
-    let myUser = this.props.reduxStore.user.username
+    let chats = this.props.chats
+    let myUsername = this.props.user.username
     return (
 
       <Grid container className={classes.root} spacing={5} justify='center'>
         <FindChatButton buttonStyling={classes.findChat} />
-
-
         {chats.map((chat, index) => {
 
           let active = chat.active
@@ -73,7 +64,7 @@ class ChatList extends Component {
           for (let message of chat.chat_messages) {
             console.log(message);
 
-            if (message.username !== myUser && message.username !== 'kenbot') {
+            if (message.username !== myUsername && message.username !== 'kenbot') {
               partnerAvatar = message.img
               console.log(`logging message.img`);
 
@@ -93,18 +84,15 @@ class ChatList extends Component {
             </Grid>
           )
         })}
-
       </Grid>
-
-
     )
-
   }
 }
 
 const mapStateToProps = (reduxStore) => {
   return ({
-    reduxStore
+    chats: reduxStore.chats,
+    user: reduxStore.user
   })
 }
 
