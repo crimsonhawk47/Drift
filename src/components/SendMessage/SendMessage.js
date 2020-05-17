@@ -34,7 +34,6 @@ class SendMessage extends Component {
   }
 
   keyPress = (event, chat_id) => {
-    console.log(event.keyCode);
     if (event.keyCode === 13) {
       this.sendMessage(chat_id)
     }
