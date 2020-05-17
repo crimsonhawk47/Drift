@@ -4,7 +4,7 @@ async function isChatActive(chatId) {
     try {
         let isChatActive = await pool.query(`SELECT * FROM "chat"
                             WHERE "chat".id = $1`, [chatId])
-        if (!isChatActive.rows[0].active) {
+        if (isChatActive.rows[0] && !isChatActive.rows[0].active) {
             return Promise.reject('Chat was no longer active')
         }
         else {
