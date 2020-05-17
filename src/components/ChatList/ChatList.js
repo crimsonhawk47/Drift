@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Paper, Grid, Typography, Button, Avatar, Box, Card } from '@material-ui/core'
+import ListClock from '../ListClock/ListClock'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 
 import FindChatButton from '../FindChatButton/FindChatButton'
+import LastMessage from '../LastMessage/LastMessage'
 
 const styles = theme => ({
   root: {
@@ -57,7 +59,7 @@ class ChatList extends Component {
 
       <Grid container className={classes.root} spacing={5} justify='center'>
         <FindChatButton buttonStyling={classes.findChat} />
-        
+
 
         {chats.map((chat, index) => {
 
@@ -66,8 +68,8 @@ class ChatList extends Component {
           let active = chat.active
           let messages = chat.chat_messages;
           let chat_date = chat.chat_date
+
           let lastMessage = messages[messages.length - 1].message
-          let timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
           let partnerAvatar;
           for (let message of chat.chat_messages) {
             console.log(message);
@@ -96,16 +98,8 @@ class ChatList extends Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Card>
-                      <Typography className={classes.lastMessage}>Last Message: {lastMessage}</Typography>
-                    </Card>
-                  </Grid>
-
-                  <Grid item container alignItems='center' xs={3}>
-                    <Typography className={classes.timeLeft}>{active ? timeLeft + ' Hours Left' : 'Goodbye, friend!'}</Typography>
-                  </Grid>
-
+                  <LastMessage textStyling={classes.lastMessage} lastMessage={lastMessage} />
+                  <ListClock active={active} chatDate={chat_date} timeTextStyling={classes.timeLeft} />
                 </Grid>
               </Box>
             </Grid>
