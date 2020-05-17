@@ -19,13 +19,11 @@ const sendMessage = (socket, io, serverMethods) => {
       //of this unless the chatId being sent is actually a room that socket is in, otherwise
       //People could modify their client and post to any room. 
       if (socket.rooms.hasOwnProperty(chatId)) {
-
         const queryText = `INSERT INTO "messages" ("message", "chat_id", "user_id", "date")
                         VALUES($1, $2, $3, NOW());`
         await pool.query(queryText, [message, chatId, userId])
         //Tell the room that a message was sent
         io.to(chatId).emit('NEW_MESSAGE')
-
         //Getting an array of sockets in the room. 
         const arrayOfSockets = serverMethods.getArrayOfSocketsInRoom(io, chatId)
         //Telling all sockets in the room to update chats. 
@@ -40,7 +38,7 @@ const sendMessage = (socket, io, serverMethods) => {
       }
     } catch (err) {
       console.log(err);
-      socket.emit('ERROR', err)
+      socket.emit('ERROR', 'SERVER ERROR: Something went wrong with sending your message')
     }
   })
 }
