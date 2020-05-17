@@ -14,7 +14,7 @@ const FindChatButton = (props) => {
 
     return (
         <Grid item xs={4}>
-            <Button variant="contained" onClick={() => { this.findChat() }}>FIND CHAT</Button>
+            <Button variant="contained" className={props.buttonStyling} onClick={() => { this.findChat() }}>FIND CHAT</Button>
         </Grid>
 
     )

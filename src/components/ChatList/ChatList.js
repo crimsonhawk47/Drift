@@ -56,7 +56,7 @@ class ChatList extends Component {
     return (
 
       <Grid container className={classes.root} spacing={5} justify='center'>
-        <FindChatButton className={classes.findChat} />
+        <FindChatButton buttonStyling={classes.findChat} />
         
 
         {chats.map((chat, index) => {
