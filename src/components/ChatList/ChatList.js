@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 
+import FindChatButton from '../FindChatButton/FindChatButton'
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -40,12 +42,12 @@ class ChatList extends Component {
     this.props.history.push(`/chat/${index}`)
   }
 
-  findChat = () => {
-    this.props.dispatch({
-      type: 'FIND_CHAT',
-      payload: this.props.history,
-    })
-  }
+  // findChat = () => {
+  //   this.props.dispatch({
+  //     type: 'FIND_CHAT',
+  //     payload: this.props.history,
+  //   })
+  // }
 
   render() {
     const { classes } = this.props;
@@ -54,9 +56,8 @@ class ChatList extends Component {
     return (
 
       <Grid container className={classes.root} spacing={5} justify='center'>
-        <Grid item xs={4}>
-          <Button variant="contained" className={classes.findChat} onClick={() => { this.findChat() }}>FIND CHAT</Button>
-        </Grid>
+        <FindChatButton className={classes.findChat} />
+        
 
         {chats.map((chat, index) => {
 
