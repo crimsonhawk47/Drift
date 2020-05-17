@@ -35,6 +35,7 @@ const setupSocket = () => {
 
     innerSocket.on('ERROR', (data) => {
       console.error(data)
+      alert(data)
     })
 
     //Should only trigger if client is modified
