@@ -8,6 +8,7 @@ import moment from 'moment'
 
 import FindChatButton from '../FindChatButton/FindChatButton'
 import LastMessage from '../LastMessage/LastMessage'
+import ListProfile from '../ListProfile/ListProfile'
 
 const styles = theme => ({
   root: {
@@ -63,8 +64,6 @@ class ChatList extends Component {
 
         {chats.map((chat, index) => {
 
-          let user1 = chat.participants[0]
-          let user2 = chat.participants[1]
           let active = chat.active
           let messages = chat.chat_messages;
           let chat_date = chat.chat_date
@@ -86,18 +85,7 @@ class ChatList extends Component {
             <Grid item xs={12} key={index} onClick={() => { this.goToChat(index) }}>
               <Box marginLeft={2}>
                 <Grid container>
-                  <Grid container item xs={3}>
-                    <Grid container justify='center' alignItems='center'>
-                      <Grid item xs={12}>
-                        <Avatar src={partnerAvatar} />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography className={classes.username}>
-                          {myUser === user1 ? user2 : user1}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <ListProfile participants={chat.participants} avatar={partnerAvatar} textStyling={classes.username} />
                   <LastMessage textStyling={classes.lastMessage} lastMessage={lastMessage} />
                   <ListClock active={active} chatDate={chat_date} timeTextStyling={classes.timeLeft} />
                 </Grid>
