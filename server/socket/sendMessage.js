@@ -40,7 +40,7 @@ const sendMessage = (socket, io, serverMethods) => {
       }
     } catch (err) {
       console.log(err);
-      socket.emit(err)
+      socket.emit('ERROR', err)
     }
   })
 }
