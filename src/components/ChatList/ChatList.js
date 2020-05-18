@@ -47,16 +47,15 @@ class ChatList extends Component {
 
   render() {
     const { classes } = this.props;
-    let chats = this.props.chats
+    const chats = this.props.chats
     return (
 
       <Grid container className={classes.root} spacing={5} justify='center'>
         <FindChatButton buttonStyling={classes.findChat} />
         {chats.map((chat, index) => {
 
-          let messages = chat.chat_messages;
-
-          let lastMessage = messages[messages.length - 1].message
+          const messages = chat.chat_messages;
+          const lastMessage = messages[messages.length - 1].message
 
           return (
             <Grid item xs={12} key={index} onClick={() => { this.goToChat(index) }}>
