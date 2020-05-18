@@ -48,37 +48,23 @@ class ChatList extends Component {
   render() {
     const { classes } = this.props;
     let chats = this.props.chats
-    let myUsername = this.props.user.username
     return (
 
       <Grid container className={classes.root} spacing={5} justify='center'>
         <FindChatButton buttonStyling={classes.findChat} />
         {chats.map((chat, index) => {
 
-          let active = chat.active
           let messages = chat.chat_messages;
-          let chat_date = chat.chat_date
 
           let lastMessage = messages[messages.length - 1].message
-          let partnerAvatar;
-          for (let message of messages) {
-            console.log(message);
 
-            if (message.username !== myUsername && message.username !== 'kenbot') {
-              partnerAvatar = message.img
-              console.log(`logging message.img`);
-
-              console.log(message.img);
-              break;
-            }
-          }
           return (
             <Grid item xs={12} key={index} onClick={() => { this.goToChat(index) }}>
               <Box marginLeft={2}>
                 <Grid container>
-                  <ListProfile participants={chat.participants} avatar={partnerAvatar} textStyling={classes.username} />
+                  <ListProfile chat={chat} textStyling={classes.username} />
                   <LastMessage textStyling={classes.lastMessage} lastMessage={lastMessage} />
-                  <ListClock active={active} chatDate={chat_date} timeTextStyling={classes.timeLeft} />
+                  <ListClock chat={chat} timeTextStyling={classes.timeLeft} />
                 </Grid>
               </Box>
             </Grid>

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux'
 import { Grid, Typography, Box } from '@material-ui/core'
+import { withRouter } from 'react-router-dom'
+
 import { Avatar } from '@material-ui/core'
 
 
@@ -29,4 +31,4 @@ const mapStateToProps = reduxStore => {
         { user: reduxStore.user }
     )
 }
-export default connect(mapStateToProps)(UserHeaderDisplay)
+export default withRouter(connect(mapStateToProps)(UserHeaderDisplay))
