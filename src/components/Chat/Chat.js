@@ -23,6 +23,9 @@ const styles = theme => ({
     margin: '20px',
     marginLeft: '120px'
   },
+  partnerText: {
+    fontStyle: 'italic'
+  }
 });
 
 
@@ -50,9 +53,8 @@ class Chat extends Component {
     let active = chat && chat.active
     let chat_date = chat && chat.chat_date
     let timeLeft;
-    let myUser = this.props.reduxStore.user.username
     let partner = chat && chat.partner.name;
-    if (chat && chat.chat_date) {
+    if (chat_date) {
       timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
     }
 
@@ -64,18 +66,12 @@ class Chat extends Component {
             <div></div>
           }
         </Grid>
-        <Box fontStyle='italic'>
-          <Typography >{partner}</Typography>
-        </Box>
-          <ChatMessages scrollStyling={classes.scroll}/>
-          
-
-
-        <div></div>
+        <Typography className={classes.partnerText}>{partner}</Typography>
+        <ChatMessages scrollStyling={classes.scroll} />
         <Grid item xs={11} container justify="center">
           {active ?
             <SendMessage chat_id={chat_id} /> :
-            <p></p>}
+            null}
         </Grid>
       </Grid>
     )
