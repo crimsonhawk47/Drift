@@ -76,7 +76,7 @@ class Message extends Component {
     let img = messageData.img
 
     return (
-      <Grid item container xs={7} className={classes.message}>
+      <Grid item container xs={9} className={classes.message}>
         <DeleteAlert
           open={this.state.open}
           handleClickOpen={this.handleClickOpen}
