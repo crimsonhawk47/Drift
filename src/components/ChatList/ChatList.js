@@ -61,7 +61,7 @@ class ChatList extends Component {
 
           let lastMessage = messages[messages.length - 1].message
           let partnerAvatar;
-          for (let message of chat.chat_messages) {
+          for (let message of messages) {
             console.log(message);
 
             if (message.username !== myUsername && message.username !== 'kenbot') {
