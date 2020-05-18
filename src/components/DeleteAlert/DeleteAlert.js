@@ -61,9 +61,4 @@ class DeleteAlert extends Component {
   }
 }
 
-const mapStateToProps = reduxStore => {
-  return (
-    { reduxStore }
-  )
-}
-export default withStyles(styles)(connect(mapStateToProps)(DeleteAlert))
+export default withStyles(styles)(connect()(DeleteAlert))

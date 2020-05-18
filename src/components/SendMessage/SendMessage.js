@@ -69,9 +69,4 @@ class SendMessage extends Component {
   }
 }
 
-const mapStateToProps = reduxStore => {
-  return (
-    { reduxStore }
-  )
-}
-export default withRouter(withStyles(styles)(connect(mapStateToProps)(SendMessage)))
+export default withRouter(withStyles(styles)(connect()(SendMessage)))
