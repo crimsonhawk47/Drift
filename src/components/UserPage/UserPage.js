@@ -1,11 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
-import { Grid, Typography, Box } from '@material-ui/core'
 
-import { Avatar } from '@material-ui/core'
 import { Route, withRouter } from 'react-router-dom'
 import ChatList from '../ChatList/ChatList'
+import UserHeaderDisplay from '../UserHeaderDisplay/UserHeaderDisplay'
 
 // this could also be written with destructuring parameters as:
 // const UserPage = ({ user }) => (
@@ -15,21 +13,8 @@ import ChatList from '../ChatList/ChatList'
 const UserPage = (props) => (
 
   <div>
-    <Grid container spacing={6} alignItems='center'>
-      <Grid item xs={1}>
-        <Avatar component='span' onClick={() => { props.history.push('/avatar') }} src={props.user.image} />
-      </Grid>
-      <Grid item xs={2}>
-        <Box fontStyle="italic" fontWeight={100} fontSize={21} fontFamily="Roboto">
-          <Typography display='inline' variant='p' id="welcome">
-            {props.user.username}
-          </Typography>
-        </Box>
-      </Grid>
-    </Grid>
+    <UserHeaderDisplay />
     <ChatList />
-    {/* <p>Your ID is: {props.user.id}</p> */}
-    {/* <LogOutButton className="log-in" /> */}
   </div >
 );
 
