@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Paper, Grid, Typography, Button, Input } from '@material-ui/core'
 import SendIcon from '@material-ui/icons/Send'
 
@@ -69,9 +69,4 @@ class SendMessage extends Component {
   }
 }
 
-const mapStateToProps = reduxStore => {
-  return (
-    { reduxStore }
-  )
-}
-export default withRouter(withStyles(styles)(connect(mapStateToProps)(SendMessage)))
+export default withRouter(withStyles(styles)(connect()(SendMessage)))

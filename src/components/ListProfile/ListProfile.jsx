@@ -4,10 +4,10 @@ import { Grid, Typography, Avatar } from '@material-ui/core'
 
 
 const ListProfile = (props) => {
-    let user1 = props.participants[0]
-    let user2 = props.participants[1]
+    let user1 = props.chat.participants[0]
+    let user2 = props.chat.participants[1]
     const myUser = props.user
-    const partnerAvatar = props.avatar
+    const partnerAvatar = props.chat.partner.image
     return (
         <Grid container item xs={3}>
             <Grid container justify='center' alignItems='center'>

@@ -32,10 +32,4 @@ class Loading extends Component {
   }
 }
 
-const mapStateToProps = reduxStore => {
-  return (
-    { reduxStore }
-  )
-}
-
-export default withStyles(styles)(connect(mapStateToProps)(Loading))
+export default withStyles(styles)(connect()(Loading))

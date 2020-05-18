@@ -30,9 +30,5 @@ class AvatarPicker extends Component {
   }
 }
 
-const mapStateToProps = reduxStore => {
-  return ({
-    reduxStore
-  })
-}
-export default connect(mapStateToProps)(AvatarPicker)
+
+export default connect()(AvatarPicker)

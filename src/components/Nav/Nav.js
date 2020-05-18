@@ -12,10 +12,10 @@ const Nav = (props) => (
         {/* Show this link if they are logged in or not,
         but call this link 'Home' if they are logged in,
         and call this link 'Login / Register' if they are not */}
-        {props.state.user.id ? 'Chats' : 'Login / Register'}
+        {props.user.id ? 'Chats' : 'Login / Register'}
       </Link>
       {/* Show the link to the info page and the logout button if the user is logged in */}
-      {props.state.user.id && (
+      {props.user.id && (
         <>
           <LogOutButton className="nav-link"/>
         </>
@@ -31,7 +31,7 @@ const Nav = (props) => (
 // if you wanted you could write this code like this:
 // const mapStateToProps = ({ user }) => ({ user });
 const mapStateToProps = state => ({
-  state
+  user: state.user
 });
 
 export default connect(mapStateToProps)(Nav);

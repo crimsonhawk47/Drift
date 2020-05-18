@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import Message from '../Message/Message'
 import SendMessage from '../SendMessage/SendMessage'
+import ChatMessages from '../ChatMessages/ChatMessages'
 import { withRouter } from 'react-router-dom'
 
 const styles = theme => ({
@@ -22,6 +23,9 @@ const styles = theme => ({
     margin: '20px',
     marginLeft: '120px'
   },
+  partnerText: {
+    fontStyle: 'italic'
+  }
 });
 
 
@@ -49,19 +53,9 @@ class Chat extends Component {
     let active = chat && chat.active
     let chat_date = chat && chat.chat_date
     let timeLeft;
-    let myUser = this.props.reduxStore.user.username
-    let partner;
-    if (chat && chat.chat_date) {
+    let partner = chat && chat.partner.name;
+    if (chat_date) {
       timeLeft = 24 - Number(moment().diff(chat_date, 'hours'))
-    }
-
-
-    if (chat) {
-      for (let named of chat.participants) {
-        if (named !== myUser) {
-          partner = named;
-        }
-      }
     }
 
     return (
@@ -72,32 +66,12 @@ class Chat extends Component {
             <div></div>
           }
         </Grid>
-        <Box fontStyle='italic'>
-          <Typography >{partner}</Typography>
-        </Box>
-        <Grid item xs={12} className={classes.scroll} id='scroll-anchor'>
-          {chat && chat.chat_messages.map((messageData, index) => {
-            if (messageData.username === myUser) {
-              return (<Grid spacing={0} container justify='flex-start'>
-                <Message key={index} messageData={messageData} />
-              </Grid>)
-            }
-            else {
-              return (
-                <Grid container spacing={0} justify='flex-end'>
-                  <Message key={index} messageData={messageData} />
-                </Grid>
-              )
-            }
-          })}
-        </Grid>
-
-
-        <div></div>
+        <Typography className={classes.partnerText}>{partner}</Typography>
+        <ChatMessages scrollStyling={classes.scroll} />
         <Grid item xs={11} container justify="center">
           {active ?
             <SendMessage chat_id={chat_id} /> :
-            <p></p>}
+            null}
         </Grid>
       </Grid>
     )

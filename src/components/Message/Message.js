@@ -61,12 +61,12 @@ class Message extends Component {
   render() {
     const { classes } = this.props;
     let index = this.props.match.params.index
-    let chat = this.props.reduxStore.chats[index]
+    let chat = this.props.chats[index]
     let chat_id = chat && chat.chat_id
     let active = chat && chat.active
 
     let messageData = this.props.messageData
-    let myUser = this.props.reduxStore.user.username
+    let myUser = this.props.user.username
     let message = messageData.message
     let userSpeaking = messageData.username
     let date = messageData.date
@@ -115,7 +115,10 @@ class Message extends Component {
 
 const mapStateToProps = reduxStore => {
   return (
-    { reduxStore }
+    {
+      chats: reduxStore.chats,
+      user: reduxStore.user
+    }
   )
 }
 export default withRouter(withStyles(styles)(connect(mapStateToProps)(Message)))
