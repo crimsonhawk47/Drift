@@ -32,78 +32,70 @@ const styles = theme => ({
   }
 });
 
-class Message extends Component {
+const Message = (props) => {
 
-  state = {
-    open: false
+  const [open, setOpen] = React.useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true)
   }
 
-  handleClickOpen = () => {
-    this.setState({
-      open: true
-    })
+  const handleClickClose = () => {
+    setOpen(false)
   }
 
-  handleClickClose = () => {
-    this.setState({
-      open: false
-    })
-  }
-
-  deleteMessage = (id, chatId) => {
+  const deleteMessage = (id, chatId) => {
     console.log(`DELETING`);
-    this.props.dispatch({
+    props.dispatch({
       type: 'DELETE_MESSAGE',
       payload: { id, chatId }
     })
   }
 
-  render() {
-    const { classes } = this.props;
-    let index = this.props.match.params.index
-    let chat = this.props.chats[index]
-    let chat_id = chat && chat.chat_id
-    let active = chat && chat.active
+  const { classes } = props;
+  let index = props.match.params.index
+  let chat = props.chats[index]
+  let chat_id = chat && chat.chat_id
+  let active = chat && chat.active
 
-    let messageData = this.props.messageData
-    let myUser = this.props.user.username
-    let message = messageData.message
-    let userSpeaking = messageData.username
-    let date = messageData.date
+  let messageData = props.messageData
+  let myUser = props.user.username
+  let message = messageData.message
+  let userSpeaking = messageData.username
+  let date = messageData.date
 
-    date = moment(date).format('LT, LL')
+  date = moment(date).format('LT, LL')
 
-    let img = messageData.img
+  let img = messageData.img
 
-    return (
-      <Grid item xs={9} className={classes.message}>
-        <DeleteAlert
-          open={this.state.open}
-          handleClickOpen={this.handleClickOpen}
-          handleClickClose={this.handleClickClose}
-          deleteMessage={() => { this.deleteMessage(messageData.id, chat_id) }} />
+  return (
+    <Grid item xs={9} className={classes.message}>
+      <DeleteAlert
+        open={open}
+        handleClickOpen={handleClickOpen}
+        handleClickClose={handleClickClose}
+        deleteMessage={() => { deleteMessage(messageData.id, chat_id) }} />
 
-        <Paper>
-          <Grid container>
-            <Grid item xs={3} >
-              <Grid justify='center' container>
-                <Avatar src={img}></Avatar>
-              </Grid>
-              <Grid justify='center' container>
-                {userSpeaking === myUser && active ?
-                  <DeleteIcon color="action" fontSize="small" onClick={() => this.handleClickOpen()} /> : <p></p>}
-              </Grid>
+      <Paper>
+        <Grid container>
+          <Grid item xs={3} >
+            <Grid justify='center' container>
+              <Avatar src={img}></Avatar>
             </Grid>
-            <Grid item xs={9}>
-              <Typography className={classes.wordWrap}>{message}</Typography>
-              <Typography className={classes.date}>{date}</Typography>
+            <Grid justify='center' container>
+              {userSpeaking === myUser && active ?
+                <DeleteIcon color="action" fontSize="small" onClick={() => handleClickOpen()} /> : <p></p>}
             </Grid>
           </Grid>
-        </Paper>
-      </Grid>
-    )
+          <Grid item xs={9}>
+            <Typography className={classes.wordWrap}>{message}</Typography>
+            <Typography className={classes.date}>{date}</Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Grid>
+  )
 
-  }
 }
 
 const mapStateToProps = reduxStore => {
