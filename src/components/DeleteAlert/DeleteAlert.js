@@ -12,20 +12,13 @@ const styles = theme => ({
 
 class DeleteAlert extends Component {
 
-  state = {
-    open: false
-  }
-
   handleClickOpen = () => {
-    this.setState({
-      open: true
-    })
+    this.props.setOpen(true)
   }
 
   handleClickClose = () => {
-    this.setState({
-      open: false
-    })
+    this.props.setOpen(false)
+
   }
 
   render() {
@@ -49,8 +42,10 @@ class DeleteAlert extends Component {
             <Button onClick={this.props.handleClickClose}>
               Nevermind
             </Button>
-            <Button onClick={() => {this.props.handleClickClose()
-                                    this.props.deleteMessage()}} autoFocus>
+            <Button onClick={() => {
+              this.props.handleClickClose()
+              this.props.deleteMessage()
+            }} autoFocus>
               Delete
             </Button>
           </DialogActions>

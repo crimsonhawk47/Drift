@@ -32,17 +32,11 @@ const styles = theme => ({
   }
 });
 
+
+
 const Message = (props) => {
 
   const [open, setOpen] = React.useState(false)
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClickClose = () => {
-    setOpen(false)
-  }
 
   const deleteMessage = (id, chatId) => {
     console.log(`DELETING`);
@@ -53,27 +47,24 @@ const Message = (props) => {
   }
 
   const { classes } = props;
-  let index = props.match.params.index
-  let chat = props.chats[index]
-  let chat_id = chat && chat.chat_id
-  let active = chat && chat.active
+  const myUsername = props.user.username
+  const indexOfChat = props.match.params.index
+  const chat = props.chats[indexOfChat]
+  const chat_id = chat && chat.chat_id
+  const isChatActive = chat && chat.active
+  const messageData = props.messageData
+  const messageText = messageData.message
+  const userSpeaking = messageData.username
+  const date = messageData.date
+  const img = messageData.img
 
-  let messageData = props.messageData
-  let myUser = props.user.username
-  let message = messageData.message
-  let userSpeaking = messageData.username
-  let date = messageData.date
-
-  date = moment(date).format('LT, LL')
-
-  let img = messageData.img
+  const date = moment(date).format('LT, LL')
 
   return (
     <Grid item xs={9} className={classes.message}>
       <DeleteAlert
         open={open}
-        handleClickOpen={handleClickOpen}
-        handleClickClose={handleClickClose}
+        setOpen={setOpen}
         deleteMessage={() => { deleteMessage(messageData.id, chat_id) }} />
 
       <Paper>
@@ -83,12 +74,12 @@ const Message = (props) => {
               <Avatar src={img}></Avatar>
             </Grid>
             <Grid justify='center' container>
-              {userSpeaking === myUser && active ?
+              {userSpeaking === myUsername && isChatActive ?
                 <DeleteIcon color="action" fontSize="small" onClick={() => handleClickOpen()} /> : <p></p>}
             </Grid>
           </Grid>
           <Grid item xs={9}>
-            <Typography className={classes.wordWrap}>{message}</Typography>
+            <Typography className={classes.wordWrap}>{messageText}</Typography>
             <Typography className={classes.date}>{date}</Typography>
           </Grid>
         </Grid>
