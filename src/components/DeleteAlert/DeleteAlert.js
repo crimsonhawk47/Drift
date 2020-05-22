@@ -28,7 +28,7 @@ class DeleteAlert extends Component {
       <>
         <Dialog
           open={this.props.open}
-          onClose={this.props.handleClickClose}
+          onClose={this.handleClickClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -39,11 +39,11 @@ class DeleteAlert extends Component {
              </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.handleClickClose}>
+            <Button onClick={this.handleClickClose}>
               Nevermind
             </Button>
             <Button onClick={() => {
-              this.props.handleClickClose()
+              this.handleClickClose()
               this.props.deleteMessage()
             }} autoFocus>
               Delete
