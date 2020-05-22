@@ -54,11 +54,11 @@ const Message = (props) => {
   const isChatActive = chat && chat.active
   const messageData = props.messageData
   const messageText = messageData.message
+  const messageDate = messageData.date
   const userSpeaking = messageData.username
-  const date = messageData.date
   const img = messageData.img
 
-  const date = moment(date).format('LT, LL')
+  const date = moment(messageDfate).format('LT, LL')
 
   return (
     <Grid item xs={9} className={classes.message}>
@@ -75,7 +75,7 @@ const Message = (props) => {
             </Grid>
             <Grid justify='center' container>
               {userSpeaking === myUsername && isChatActive ?
-                <DeleteIcon color="action" fontSize="small" onClick={() => handleClickOpen()} /> : <p></p>}
+                <DeleteIcon color="action" fontSize="small" onClick={() => setOpen(true)} /> : <p></p>}
             </Grid>
           </Grid>
           <Grid item xs={9}>
