@@ -49,32 +49,26 @@ const Message = (props) => {
   const { classes } = props;
   const myUsername = props.user.username
   const indexOfChat = props.match.params.index
-  const chat = props.chats[indexOfChat]
-  const chat_id = chat && chat.chat_id
-  const isChatActive = chat && chat.active
-  const messageData = props.messageData
-  const messageText = messageData.message
-  const messageDate = messageData.date
-  const userSpeaking = messageData.username
-  const img = messageData.img
+  const { chat_id, active: isChatActive } = props.chats[indexOfChat]
+  const { message: messageText, date: messageDate, id: messageId, username: messageUser, img: messageImg } = props.messageData
 
-  const date = moment(messageDfate).format('LT, LL')
+  const date = moment(messageDate).format('LT, LL')
 
   return (
     <Grid item xs={9} className={classes.message}>
       <DeleteAlert
         open={open}
         setOpen={setOpen}
-        deleteMessage={() => { deleteMessage(messageData.id, chat_id) }} />
+        deleteMessage={() => { deleteMessage(messageId, chat_id) }} />
 
       <Paper>
         <Grid container>
           <Grid item xs={3} >
             <Grid justify='center' container>
-              <Avatar src={img}></Avatar>
+              <Avatar src={messageImg}></Avatar>
             </Grid>
             <Grid justify='center' container>
-              {userSpeaking === myUsername && isChatActive ?
+              {messageUser === myUsername && isChatActive ?
                 <DeleteIcon color="action" fontSize="small" onClick={() => setOpen(true)} /> : <p></p>}
             </Grid>
           </Grid>
