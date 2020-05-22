@@ -36,7 +36,7 @@ const styles = theme => ({
 
 const Message = (props) => {
 
-  const [open, setOpen] = React.useState(false)
+  const [alertOpen, setAlertOpen] = React.useState(false)
 
   const deleteMessage = (id, chatId) => {
     console.log(`DELETING`);
@@ -52,13 +52,13 @@ const Message = (props) => {
   const { chat_id, active: isChatActive } = props.chats[indexOfChat]
   const { message: messageText, date: messageDate, id: messageId, username: messageUser, img: messageImg } = props.messageData
 
-  const date = moment(messageDate).format('LT, LL')
+  const messageDateFormatted = moment(messageDate).format('LT, LL')
 
   return (
     <Grid item xs={9} className={classes.message}>
       <DeleteAlert
-        open={open}
-        setOpen={setOpen}
+        open={alertOpen}
+        setOpen={setAlertOpen}
         deleteMessage={() => { deleteMessage(messageId, chat_id) }} />
 
       <Paper>
@@ -69,12 +69,12 @@ const Message = (props) => {
             </Grid>
             <Grid justify='center' container>
               {messageUser === myUsername && isChatActive ?
-                <DeleteIcon color="action" fontSize="small" onClick={() => setOpen(true)} /> : <p></p>}
+                <DeleteIcon color="action" fontSize="small" onClick={() => setAlertOpen(true)} /> : <p></p>}
             </Grid>
           </Grid>
           <Grid item xs={9}>
             <Typography className={classes.wordWrap}>{messageText}</Typography>
-            <Typography className={classes.date}>{date}</Typography>
+            <Typography className={classes.date}>{messageDateFormatted}</Typography>
           </Grid>
         </Grid>
       </Paper>
